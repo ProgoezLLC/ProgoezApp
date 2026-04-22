@@ -1,0 +1,1530 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Progoez HR Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0f1117;--surface:#181c27;--surface2:#1e2333;--border:#2a2f42;--accent:#4f8ef7;--accent2:#7c5cfc;--green:#22c55e;--orange:#f59e0b;--red:#ef4444;--cyan:#06b6d4;--pink:#ec4899;--text:#e8eaf2;--muted:#6b7280;--muted2:#9ca3af;--card:#1a1f2e;}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden;}
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:10px;}
+
+/* LOGIN */
+#login-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:radial-gradient(ellipse at 30% 20%,rgba(79,142,247,0.12) 0%,transparent 60%),
+  radial-gradient(ellipse at 80% 80%,rgba(124,92,252,0.1) 0%,transparent 60%),var(--bg);}
+.login-box{background:var(--surface);border:1px solid var(--border);border-radius:20px;padding:48px;width:460px;position:relative;overflow:hidden;}
+.login-box::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));}
+.brand{display:flex;align-items:center;gap:12px;margin-bottom:36px;}
+.brand-logo{width:40px;height:40px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700;color:#fff;}
+.brand-name{font-size:22px;font-weight:700;letter-spacing:-0.5px;}
+.brand-sub{font-size:11px;color:var(--muted);letter-spacing:2px;text-transform:uppercase;}
+.login-title{font-size:26px;font-weight:700;letter-spacing:-0.5px;margin-bottom:8px;}
+.login-sub{color:var(--muted);font-size:14px;margin-bottom:28px;}
+.field{margin-bottom:16px;}
+.field-label{font-size:11px;color:var(--muted2);margin-bottom:6px;letter-spacing:0.6px;font-weight:700;text-transform:uppercase;}
+.field input{width:100%;padding:11px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s;}
+.field input:focus{border-color:var(--accent);}
+.demo-hint{font-size:11px;color:var(--muted);margin-top:5px;font-family:'DM Mono',monospace;line-height:1.7;}
+.btn-primary{width:100%;padding:12px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:9px;color:#fff;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:600;cursor:pointer;transition:opacity 0.2s,transform 0.1s;margin-top:4px;}
+.btn-primary:hover{opacity:0.9;}
+.login-error{background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:8px;padding:10px 14px;font-size:13px;color:var(--red);margin-bottom:16px;display:none;}
+
+/* TOPBAR */
+.topbar{height:60px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;padding:0 24px;gap:16px;position:sticky;top:0;z-index:100;}
+.topbar-logo{width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,var(--accent),var(--accent2));display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;color:#fff;flex-shrink:0;}
+.topbar-name{font-size:16px;font-weight:700;letter-spacing:-0.3px;}
+.topbar-spacer{flex:1;}
+.topbar-pill{background:var(--surface2);border:1px solid var(--border);border-radius:20px;padding:5px 14px;font-size:13px;display:flex;align-items:center;gap:8px;}
+.role-badge{font-size:10px;padding:2px 8px;border-radius:20px;font-weight:700;letter-spacing:0.6px;text-transform:uppercase;}
+.role-employee{background:rgba(79,142,247,0.15);color:var(--accent);}
+.role-manager{background:rgba(34,197,94,0.15);color:var(--green);}
+.role-hradmin{background:rgba(245,158,11,0.15);color:var(--orange);}
+.role-superadmin{background:rgba(124,92,252,0.15);color:var(--accent2);}
+.topbar-avatar{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;cursor:pointer;flex-shrink:0;}
+.btn-logout{padding:6px 14px;background:transparent;border:1px solid var(--border);border-radius:8px;color:var(--muted2);font-family:'DM Sans',sans-serif;font-size:13px;cursor:pointer;transition:all 0.2s;}
+.btn-logout:hover{border-color:var(--red);color:var(--red);}
+
+/* LAYOUT */
+#app{min-height:100vh;flex-direction:column;}
+.app-body{display:flex;flex:1;}
+.sidebar{width:230px;background:var(--surface);border-right:1px solid var(--border);padding:16px 10px;display:flex;flex-direction:column;gap:2px;position:sticky;top:60px;height:calc(100vh - 60px);overflow-y:auto;flex-shrink:0;}
+.sidebar-section{font-size:10px;color:var(--muted);letter-spacing:1.5px;text-transform:uppercase;padding:14px 12px 5px;font-weight:700;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:9px;cursor:pointer;transition:all 0.15s;font-size:14px;color:var(--muted2);font-weight:500;}
+.nav-item:hover{background:var(--surface2);color:var(--text);}
+.nav-item.active{background:rgba(79,142,247,0.12);color:var(--accent);}
+.nav-icon{font-size:15px;width:20px;text-align:center;flex-shrink:0;}
+.nav-badge{margin-left:auto;background:var(--accent);color:#fff;font-size:10px;font-weight:700;padding:2px 7px;border-radius:10px;}
+.main{flex:1;padding:28px;overflow-y:auto;}
+.page-title{font-size:22px;font-weight:700;letter-spacing:-0.5px;margin-bottom:4px;}
+.page-sub{font-size:14px;color:var(--muted);margin-bottom:24px;}
+.section-title{font-size:15px;font-weight:700;margin-bottom:14px;}
+
+/* CARDS & GRIDS */
+.card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:18px;}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:18px;}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:18px;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px;}
+.stat-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;position:relative;overflow:hidden;}
+.stat-val{font-size:30px;font-weight:700;letter-spacing:-1px;font-family:'DM Mono',monospace;}
+.stat-label{font-size:12px;color:var(--muted);margin-top:4px;font-weight:500;}
+.stat-icon{font-size:22px;margin-bottom:10px;}
+
+/* LEAVE STRIP */
+.leave-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:18px;}
+.leave-tile{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center;}
+.leave-tile-num{font-size:28px;font-weight:700;letter-spacing:-1px;font-family:'DM Mono',monospace;}
+.leave-tile-label{font-size:11px;color:var(--muted);margin-top:4px;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;}
+.leave-tile-used{font-size:11px;color:var(--muted);margin-top:2px;font-family:'DM Mono',monospace;}
+
+/* PROFILE */
+.profile-header{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:24px;display:flex;gap:20px;align-items:flex-start;margin-bottom:18px;position:relative;overflow:hidden;}
+.profile-header::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2));}
+.profile-avatar{width:72px;height:72px;border-radius:16px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:26px;font-weight:700;color:#fff;}
+.profile-name{font-size:20px;font-weight:700;letter-spacing:-0.3px;}
+.profile-title-text{font-size:13px;color:var(--muted);margin:3px 0 10px;}
+.profile-tags{display:flex;gap:8px;flex-wrap:wrap;}
+.tag{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:500;border:1px solid;}
+.tag-blue{border-color:rgba(79,142,247,0.3);color:var(--accent);background:rgba(79,142,247,0.08);}
+.tag-green{border-color:rgba(34,197,94,0.3);color:var(--green);background:rgba(34,197,94,0.08);}
+.tag-orange{border-color:rgba(245,158,11,0.3);color:var(--orange);background:rgba(245,158,11,0.08);}
+.tag-muted{border-color:var(--border);color:var(--muted2);background:transparent;}
+.profile-grid{display:grid;grid-template-columns:1fr 1fr;}
+.profile-field{padding:13px 0;border-bottom:1px solid var(--border);}
+.profile-field:nth-child(odd){padding-right:24px;}
+.profile-field:nth-child(even){padding-left:24px;border-left:1px solid var(--border);}
+.pf-label{font-size:10px;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;margin-bottom:4px;font-weight:700;}
+.pf-val{font-size:14px;font-weight:500;}
+
+/* FORMS */
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.form-group{margin-bottom:14px;}
+.form-label{font-size:11px;color:var(--muted2);margin-bottom:6px;display:block;letter-spacing:0.6px;font-weight:700;text-transform:uppercase;}
+.form-input{width:100%;padding:10px 14px;background:var(--surface2);border:1px solid var(--border);border-radius:9px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color 0.2s;}
+.form-input:focus{border-color:var(--accent);}
+select.form-input{cursor:pointer;}
+textarea.form-input{resize:vertical;min-height:80px;}
+.btn-submit{padding:10px 24px;background:linear-gradient(135deg,var(--accent),var(--accent2));border:none;border-radius:9px;color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;font-weight:600;cursor:pointer;transition:opacity 0.2s;}
+.btn-submit:hover{opacity:0.88;}
+.btn-sm{padding:5px 14px;border-radius:7px;font-size:12px;font-weight:600;cursor:pointer;border:none;font-family:'DM Sans',sans-serif;transition:opacity 0.2s;}
+.btn-sm:hover{opacity:0.8;}
+.btn-green{background:rgba(34,197,94,0.15);color:var(--green);}
+.btn-red{background:rgba(239,68,68,0.15);color:var(--red);}
+.btn-blue{background:rgba(79,142,247,0.15);color:var(--accent);}
+
+/* TABLES */
+.table-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+thead th{text-align:left;padding:10px 14px;font-size:10px;color:var(--muted);letter-spacing:0.8px;text-transform:uppercase;border-bottom:1px solid var(--border);font-weight:700;white-space:nowrap;}
+tbody td{padding:12px 14px;border-bottom:1px solid rgba(42,47,66,0.5);vertical-align:middle;}
+tbody tr:last-child td{border-bottom:none;}
+tbody tr:hover td{background:rgba(79,142,247,0.025);}
+.status-pill{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;letter-spacing:0.3px;white-space:nowrap;}
+.status-pending{background:rgba(245,158,11,0.12);color:var(--orange);}
+.status-approved{background:rgba(34,197,94,0.12);color:var(--green);}
+.status-rejected{background:rgba(239,68,68,0.12);color:var(--red);}
+.dot{width:5px;height:5px;border-radius:50%;background:currentColor;flex-shrink:0;}
+.emp-row-id{font-size:11px;color:var(--muted);font-family:'DM Mono',monospace;margin-top:1px;}
+
+/* ATTENDANCE */
+.att-cell{display:inline-flex;align-items:center;justify-content:center;width:28px;height:22px;border-radius:4px;font-size:11px;font-weight:700;cursor:default;}
+.att-P{background:rgba(34,197,94,0.15);color:var(--green);}
+.att-A{background:rgba(239,68,68,0.15);color:var(--red);}
+.att-CL{background:rgba(79,142,247,0.15);color:var(--accent);}
+.att-SL{background:rgba(6,182,212,0.15);color:var(--cyan);}
+.att-WO{background:rgba(42,47,66,0.5);color:var(--muted);}
+.att-HD{background:rgba(245,158,11,0.15);color:var(--orange);}
+.att-PH,.att-DH,.att-NH{background:rgba(124,92,252,0.15);color:var(--accent2);}
+.att-NA{background:transparent;color:var(--border);}
+.att-blank{background:rgba(34,197,94,0.1);color:rgba(34,197,94,0.5);}
+
+/* HOLIDAYS */
+.holiday-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 18px;display:flex;align-items:center;gap:16px;margin-bottom:10px;}
+.holiday-date-box{background:var(--surface2);border-radius:8px;padding:8px 12px;text-align:center;flex-shrink:0;min-width:60px;}
+.holiday-day{font-size:22px;font-weight:700;font-family:'DM Mono',monospace;line-height:1;}
+.holiday-month{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-top:2px;}
+.holiday-name{font-size:14px;font-weight:600;}
+.holiday-weekday{font-size:12px;color:var(--muted);margin-top:2px;}
+.holiday-type-pill{margin-left:auto;font-size:10px;padding:3px 10px;border-radius:20px;font-weight:700;letter-spacing:0.5px;}
+.holiday-fixed{background:rgba(34,197,94,0.12);color:var(--green);}
+.holiday-optional{background:rgba(245,158,11,0.12);color:var(--orange);}
+.holiday-shift-day{background:rgba(79,142,247,0.12);color:var(--accent);}
+.holiday-shift-night{background:rgba(124,92,252,0.12);color:var(--accent2);}
+
+/* INCENTIVE */
+.incentive-slab{display:grid;grid-template-columns:1fr 1fr;gap:2px;border-radius:10px;overflow:hidden;border:1px solid var(--border);margin-bottom:14px;}
+.incentive-slab-header{grid-column:1/-1;background:var(--surface2);padding:10px 14px;font-size:12px;font-weight:700;color:var(--muted2);letter-spacing:0.5px;text-transform:uppercase;}
+.slab-row{display:contents;}
+.slab-cell{padding:9px 14px;font-size:13px;background:var(--card);}
+.slab-cell:nth-child(odd){border-right:1px solid var(--border);}
+.slab-cell.highlight{background:rgba(79,142,247,0.06);}
+
+/* DIRECTORY */
+.dir-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;}
+.dir-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;display:flex;gap:12px;align-items:flex-start;transition:border-color 0.2s,transform 0.15s;}
+.dir-card:hover{border-color:rgba(79,142,247,0.5);transform:translateY(-1px);}
+.dir-avatar{width:42px;height:42px;border-radius:10px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;color:#fff;}
+.dir-dept-chip{font-size:11px;color:var(--accent);background:rgba(79,142,247,0.08);border:1px solid rgba(79,142,247,0.2);padding:2px 8px;border-radius:10px;display:inline-block;margin-top:4px;}
+
+/* NOTIF */
+.notif-item{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;gap:12px;align-items:flex-start;margin-bottom:10px;}
+.notif-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:5px;}
+.notif-unread{background:var(--accent);}
+.notif-read-dot{background:var(--border);}
+
+/* TOAST */
+#toast{position:fixed;bottom:24px;right:24px;background:var(--surface2);border:1px solid var(--border);border-radius:12px;padding:14px 20px;font-size:14px;color:var(--text);box-shadow:0 8px 32px rgba(0,0,0,0.5);display:none;z-index:9999;max-width:340px;}
+
+/* DASHBOARD INCENTIVE CARD */
+.inc-summary-card{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:18px;}
+.inc-amount{font-size:32px;font-weight:700;letter-spacing:-1px;font-family:'DM Mono',monospace;color:var(--green);}
+.inc-pending{font-size:32px;font-weight:700;letter-spacing:-1px;font-family:'DM Mono',monospace;color:var(--orange);}
+
+/* LEADERBOARD */
+.lb-row{display:flex;align-items:center;gap:14px;padding:12px 0;border-bottom:1px solid var(--border);}
+.lb-row:last-child{border-bottom:none;}
+.lb-rank{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;}
+.lb-rank-1{background:linear-gradient(135deg,#f59e0b,#fbbf24);color:#000;}
+.lb-rank-2{background:linear-gradient(135deg,#94a3b8,#cbd5e1);color:#000;}
+.lb-rank-3{background:linear-gradient(135deg,#b45309,#d97706);color:#fff;}
+.lb-rank-other{background:var(--surface2);color:var(--muted);}
+
+@media(max-width:1100px){.grid4{grid-template-columns:1fr 1fr;}.leave-strip{grid-template-columns:1fr 1fr;}.dir-grid{grid-template-columns:1fr 1fr;}}
+@media(max-width:768px){.sidebar{display:none;}.grid3{grid-template-columns:1fr;}.form-row{grid-template-columns:1fr;}}
+
+.tabs{display:flex;gap:4px;margin-bottom:20px;background:var(--surface2);padding:4px;border-radius:10px;width:fit-content;}
+.tab{padding:7px 18px;border-radius:7px;font-size:13px;font-weight:600;cursor:pointer;color:var(--muted2);transition:all 0.15s;}
+.tab.active{background:var(--surface);color:var(--text);}
+.divider{height:1px;background:var(--border);margin:16px 0;}
+.badge-pill{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:700;}
+.info-box{background:rgba(79,142,247,0.07);border:1px solid rgba(79,142,247,0.2);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--muted2);margin-bottom:16px;line-height:1.6;}
+.warn-box{background:rgba(245,158,11,0.07);border:1px solid rgba(245,158,11,0.2);border-radius:10px;padding:12px 16px;font-size:13px;color:var(--orange);margin-bottom:16px;}
+</style>
+</head>
+<body>
+<!-- LOGIN -->
+<div id="login-screen">
+  <div class="login-box">
+    <div class="brand">
+      <div class="brand-logo">P</div>
+      <div><div class="brand-name">Progoez</div><div class="brand-sub">HR Portal</div></div>
+    </div>
+    <div class="login-title">Welcome back</div>
+    <div class="login-sub">Sign in to continue to your workspace</div>
+    <div class="login-error" id="login-error">Invalid email or password.</div>
+    <div class="field">
+      <div class="field-label">Email Address</div>
+      <input type="email" id="login-email" placeholder="you@progoez.com" />
+      <div class="demo-hint">Try: jasper@progoez.com · suraj@progoez.com · ashita@progoez.com · Paul@progoez.com</div>
+    </div>
+    <div class="field">
+      <div class="field-label">Password</div>
+      <input type="password" id="login-pass" value="progoez123" />
+      <div class="demo-hint">Password: progoez123 (all accounts)</div>
+    </div>
+    <button class="btn-primary" onclick="doLogin()">Sign In →</button>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none;">
+  <div class="topbar">
+    <div class="topbar-logo">P</div>
+    <div class="topbar-name">Progoez HR</div>
+    <div class="topbar-spacer"></div>
+    <div class="topbar-pill">
+      <span id="topbar-name" style="font-weight:500"></span>
+      <span class="role-badge" id="topbar-role"></span>
+    </div>
+    <div class="topbar-avatar" id="topbar-avatar"></div>
+    <button class="btn-logout" onclick="doLogout()">Sign Out</button>
+  </div>
+  <div class="app-body">
+    <div class="sidebar" id="sidebar"></div>
+    <div class="main" id="main-content"></div>
+  </div>
+</div>
+<div id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// DATA LAYER
+// ═══════════════════════════════════════════════════════
+
+const EMPLOYEES = [
+  {empId:'PGLG004',name:'Jameel Ahmad',firstName:'Jameel',lastName:'Ahmad',alias:'NA',title:'Lead Generation Specialist',dept:'Lead Generation',type:'Full-time',email:'jameel.khan@progoez.in',joining:'2024-11-15',shift:'Day',role:'employee',password:'progoez123',active:true},
+  {empId:'PGLG005',name:'Waaris Khan',firstName:'Waaris',lastName:'Khan',alias:'NA',title:'Lead Generation Specialist',dept:'Lead Generation',type:'Full-time',email:'waris.khan@progoez.in',joining:'2025-01-08',shift:'Day',role:'employee',password:'progoez123',active:true},
+  {empId:'PGIM007',name:'Ashita Trivedi',firstName:'Ashita',lastName:'Trivedi',alias:'NA',title:'SEO Specialist',dept:'Implementation',type:'Full-time',email:'ashita@progoez.com',joining:'2025-02-17',shift:'Day',role:'employee',password:'progoez123',active:true},
+  {empId:'PGIM008',name:'Deepak Kashyap',firstName:'Deepak',lastName:'Kashyap',alias:'NA',title:'SEO Specialist',dept:'Implementation',type:'Full-time',email:'deepak@progoez.com',joining:'2025-02-17',shift:'Day',role:'employee',password:'progoez123',active:false},
+  {empId:'PGIM009',name:'Anupam Diyali',firstName:'Anupam',lastName:'Diyali',alias:'NA',title:'SEO Specialist',dept:'Implementation',type:'Full-time',email:'anupam@progoez.com',joining:'2025-03-03',shift:'Day',role:'employee',password:'progoez123',active:false},
+  {empId:'PGWD011',name:'Parag Patil',firstName:'Parag',lastName:'Patil',alias:'NA',title:'Web Developer',dept:'Development',type:'Full-time',email:'parag@progoez.com',joining:'2025-03-17',shift:'Day',role:'employee',password:'progoez123',active:false},
+  {empId:'PGIM012',name:'Saumik Mallick',firstName:'Saumik',lastName:'Mallick',alias:'NA',title:'SEO Intern',dept:'Implementation',type:'Intern',email:'saumikmallick@progoez.in',joining:'2025-04-04',shift:'Day',role:'employee',password:'progoez123',active:false},
+  {empId:'PGLG013',name:'Shakir Khan',firstName:'Shakir',lastName:'Khan',alias:'NA',title:'Lead Generation Specialist',dept:'Lead Generation',type:'Full-time',email:'shakir.khan@progoez.in',joining:'2025-04-16',shift:'Day',role:'employee',password:'progoez123',active:true},
+  {empId:'PGPM014',name:'Vibhor Sharma',firstName:'Vibhor',lastName:'Sharma',alias:'NA',title:'Account Manager',dept:'Account Management',type:'Full-time',email:'jasper@progoez.com',joining:'2025-04-14',shift:'Night',role:'manager',password:'progoez123',active:true},
+  {empId:'PGIM015',name:'Sonali Kalakoti',firstName:'Sonali',lastName:'Kalakoti',alias:'NA',title:'SEO Intern',dept:'Implementation',type:'Intern',email:'sonalikalakoti@progoez.in',joining:'2025-05-12',shift:'Day',role:'employee',password:'progoez123',active:true},
+  {empId:'PGPM017',name:'Samarth P Singh',firstName:'Samarth',lastName:'Singh',alias:'NA',title:'Account Coordinator',dept:'Account Management',type:'Full-time',email:'samarth@progoez.in',joining:'2025-06-02',shift:'Night',role:'employee',password:'progoez123',active:true},
+  {empId:'PGIM018',name:'Baljeet Kaur',firstName:'Baljeet',lastName:'Kaur',alias:'NA',title:'SEO Specialist',dept:'Implementation',type:'Full-time',email:'baljeet@progoez.com',joining:'2025-07-01',shift:'Day',role:'employee',password:'progoez123',active:false},
+  {empId:'PGDV019',name:'Kartik Verma',firstName:'Kartik',lastName:'Verma',alias:'NA',title:'Developer',dept:'Development',type:'Full-time',email:'kartik@progoez.com',joining:'2025-07-14',shift:'Day',role:'employee',password:'progoez123',active:true},
+  {empId:'PGIM020',name:'Shaik Baba Fakruddin',firstName:'Shaik',lastName:'Fakruddin',alias:'NA',title:'SEO Specialist',dept:'Implementation',type:'Full-time',email:'shaik@progoez.com',joining:'2025-07-10',shift:'Day',role:'employee',password:'progoez123',active:false},
+  {empId:'PGIM021',name:'Shivani Aggarwal',firstName:'Shivani',lastName:'Aggarwal',alias:'NA',title:'SEO Intern',dept:'Implementation',type:'Intern',email:'shivaniaggarwal@progoez.in',joining:'2025-08-04',shift:'Day',role:'employee',password:'progoez123',active:false},
+  {empId:'PGIM022',name:'Anand Kumar',firstName:'Anand',lastName:'Kumar',alias:'NA',title:'SEO Implementation Intern',dept:'Implementation',type:'Intern',email:'anandkumar@progoez.in',joining:'2025-10-01',shift:'Day',role:'employee',password:'progoez123',active:false},
+  {empId:'PGIM023',name:'Suraj Pal',firstName:'Suraj',lastName:'Pal',alias:'NA',title:'SEO Team Lead',dept:'Implementation',type:'Full-time',email:'suraj@progoez.com',joining:'2025-10-01',shift:'Day',role:'manager',password:'progoez123',active:true},
+  {empId:'PGLG024',name:'Nazameen',firstName:'Nazameen',lastName:'',alias:'NA',title:'Lead Generation Specialist',dept:'Lead Generation',type:'Full-time',email:'nazameen@progoez.in',joining:'2025-10-06',shift:'Day',role:'employee',password:'progoez123',active:true},
+  {empId:'PGIM025',name:'Sushama Banik',firstName:'Sushama',lastName:'Banik',alias:'NA',title:'SEO Implementation Intern',dept:'Implementation',type:'Intern',email:'sushama.banik@progoez.in',joining:'2025-12-15',shift:'Day',role:'employee',password:'progoez123',active:false},
+  {empId:'PGBD026',name:'Karan Khatter',firstName:'Karan',lastName:'Khatter',alias:'Kevin Miller',title:'Business Development Executive',dept:'Business Development',type:'Full-time',email:'Kevin@progoez.com',joining:'2025-01-05',shift:'Night',role:'employee',password:'progoez123',active:false},
+  {empId:'PGBD027',name:'Prajwal Sharma',firstName:'Prajwal',lastName:'Sharma',alias:'Paul Smith',title:'Business Development Executive',dept:'Business Development',type:'Full-time',email:'Paul@progoez.com',joining:'2025-01-05',shift:'Night',role:'employee',password:'progoez123',active:true},
+  {empId:'PGBD028',name:'Aditya Upadhyay',firstName:'Aditya',lastName:'Upadhyay',alias:'Adi Miller',title:'Business Development Executive',dept:'Business Development',type:'Full-time',email:'Adi@progoez.com',joining:'2025-01-05',shift:'Night',role:'employee',password:'progoez123',active:true},
+  {empId:'PGBD029',name:'Vaibhav Chauhan',firstName:'Vaibhav',lastName:'Chauhan',alias:'Van Smith',title:'Business Development Executive',dept:'Business Development',type:'Full-time',email:'Van@progoez.com',joining:'2025-01-05',shift:'Night',role:'employee',password:'progoez123',active:true},
+  {empId:'PGIM030',name:'Sonali Chaudhary',firstName:'Sonali',lastName:'Chaudhary',alias:'NA',title:'SMO/Content Intern',dept:'Implementation',type:'Intern',email:'sonalichaudhary@progoez.in',joining:'2026-01-05',shift:'Day',role:'employee',password:'progoez123',active:true},
+  {empId:'PGDV031',name:'Samir Khan',firstName:'Samir',lastName:'Khan',alias:'NA',title:'Web Developer',dept:'Development',type:'Full-time',email:'Samir@progoez.com',joining:'2026-01-19',shift:'Day',role:'employee',password:'progoez123',active:true},
+  {empId:'PGIM032',name:'Tayyaba Shaikh',firstName:'Tayyaba',lastName:'Shaikh',alias:'NA',title:'Content Writer Intern (On-page)',dept:'Implementation',type:'Intern',email:'tayyabashaikh@progoez.in',joining:'2026-01-19',shift:'Day',role:'employee',password:'progoez123',active:true},
+  {empId:'PGIM033',name:'Anu Garg',firstName:'Anu',lastName:'Garg',alias:'NA',title:'Content Writer Intern (Backlinks)',dept:'Implementation',type:'Intern',email:'anugarg@progoez.in',joining:'2026-01-19',shift:'Day',role:'employee',password:'progoez123',active:true},
+  {empId:'PGIM035',name:'Nisha Agarwal',firstName:'Nisha',lastName:'Agarwal',alias:'NA',title:'Content Writer Intern (On-page)',dept:'Implementation',type:'Intern',email:'nishaagarwal@progoez.in',joining:'2026-01-27',shift:'Day',role:'employee',password:'progoez123',active:true},
+  {empId:'PGBD034',name:'Megha Sharma',firstName:'Megha',lastName:'Sharma',alias:'Amy',title:'Business Development Executive',dept:'Business Development',type:'Full-time',email:'Amy@progoez.com',joining:'2025-01-19',shift:'Night',role:'employee',password:'progoez123',active:false},
+  {empId:'PGIM036',name:'Gaurav Tundalwar',firstName:'Gaurav',lastName:'Tundalwar',alias:'NA',title:'SEO Implementation Intern',dept:'Implementation',type:'Intern',email:'gauravtundalwar@progoez.in',joining:'2026-02-02',shift:'Day',role:'employee',password:'progoez123',active:true},
+  {empId:'PGLG037',name:'Sharul Nisha',firstName:'Sharul',lastName:'Nisha',alias:'NA',title:'Lead Generation Specialist',dept:'Lead Generation',type:'Full-time',email:'sharulnisha@progoez.in',joining:'2026-02-02',shift:'Day',role:'employee',password:'progoez123',active:true},
+  {empId:'PGIM038',name:'Peddyreddy Sunil',firstName:'Peddyreddy',lastName:'Sunil',alias:'NA',title:'SEO Implementation Intern',dept:'Implementation',type:'Intern',email:'peddyreddysunil@progoez.in',joining:'2026-02-03',shift:'Day',role:'employee',password:'progoez123',active:true},
+  {empId:'PGIM039',name:'Dixita Poojary',firstName:'Dixita',lastName:'Poojary',alias:'NA',title:'SEO Implementation Intern',dept:'Implementation',type:'Intern',email:'dixitapoojary@progoez.in',joining:'2026-02-16',shift:'Day',role:'employee',password:'progoez123',active:true},
+  {empId:'PGLG040',name:'Tahir Khan',firstName:'Tahir',lastName:'Khan',alias:'NA',title:'Lead Generation Specialist',dept:'Lead Generation',type:'Full-time',email:'tahirkhan@progoez.in',joining:'2026-02-16',shift:'Day',role:'employee',password:'progoez123',active:true},
+  {empId:'PGBD041',name:'Neeraj Neeraj',firstName:'Neeraj',lastName:'Neeraj',alias:'NA',title:'Business Development Executive',dept:'Business Development',type:'Full-time',email:'neeraj@progoez.com',joining:'2026-01-15',shift:'Night',role:'employee',password:'progoez123',active:true},
+  {empId:'PGIM042',name:'Minakshi Singh',firstName:'Minakshi',lastName:'Singh',alias:'NA',title:'SEO Specialist',dept:'Implementation',type:'Full-time',email:'minakshisingh@progoez.in',joining:'2026-03-11',shift:'Day',role:'manager',password:'progoez123',active:true},
+  // HR Admin & Super Admin
+  {empId:'PGHR001',name:'HR Admin',firstName:'HR',lastName:'Admin',alias:'NA',title:'HR Manager',dept:'Human Resources',type:'Full-time',email:'hr@progoez.com',joining:'2024-01-01',shift:'Day',role:'hradmin',password:'progoez123',active:true},
+  {empId:'PGSA001',name:'Super Admin',firstName:'Super',lastName:'Admin',alias:'NA',title:'CEO',dept:'Executive',type:'Full-time',email:'admin@progoez.com',joining:'2024-01-01',shift:'Day',role:'superadmin',password:'progoez123',active:true},
+];
+
+// Leave balances from the Feb 2026 sheet summary (post-lapse of 2025 balance)
+// CL balance as of end of Feb 2026 per the sheet summary, SL per policy
+const LEAVE_BALANCES = {
+  'PGLG004':{CL:3,SL:1},'PGLG005':{CL:3,SL:1},'PGIM007':{CL:1,SL:1},'PGLG013':{CL:3,SL:1},
+  'PGPM014':{CL:1,SL:1},'PGPM017':{CL:1.5,SL:1},'PGIM023':{CL:1,SL:0},'PGLG024':{CL:3,SL:1},
+  'PGDV031':{CL:1,SL:1},'PGBD027':{CL:0.5,SL:0},'PGBD028':{CL:2.5,SL:1},'PGBD029':{CL:-0.5,SL:1},
+  'PGLG037':{CL:2,SL:1},'PGLG040':{CL:1,SL:1},'PGBD041':{CL:3,SL:1},
+  'PGIM030':{CL:3,SL:null},'PGIM032':{CL:2,SL:null},'PGIM033':{CL:2,SL:null},'PGIM035':{CL:2,SL:null},
+  'PGDV019':{CL:0.5,SL:0},'PGIM021':{CL:0.5,SL:null},'PGIM022':{CL:1,SL:null},'PGIM025':{CL:0,SL:null},
+  'PGHR001':{CL:12,SL:4},'PGSA001':{CL:12,SL:4},
+};
+
+// Attendance records from the spreadsheet — April 2026 (the active/current month)
+// Format: empId -> {day: code} where blank=P (present on working days)
+// Based on the last sheet in the spreadsheet (April 2026)
+const ATTENDANCE = {
+  'PGLG004':{1:'WO',4:'DH',7:'WO',8:'WO',14:'WO',15:'WO',21:'WO',22:'WO',28:'WO',29:'WO'},
+  'PGLG005':{1:'WO',4:'DH',7:'WO',8:'WO',14:'WO',15:'WO',21:'WO',22:'WO',28:'WO',29:'WO'},
+  'PGIM007':{1:'WO',4:'DH',7:'WO',8:'WO',14:'WO',15:'WO',21:'WO',22:'WO',23:'CL',28:'WO',29:'WO'},
+  'PGLG013':{1:'WO',4:'DH',7:'WO',8:'WO',14:'WO',15:'WO',21:'WO',22:'WO',28:'WO',29:'WO'},
+  'PGPM014':{1:'WO',7:'WO',8:'WO',9:'CL',14:'WO',15:'WO',21:'WO',22:'WO',28:'WO',29:'WO'},
+  'PGPM017':{1:'WO',7:'WO',8:'WO',12:'CL',13:'CL',14:'WO',15:'WO',16:'A',21:'WO',22:'WO',28:'WO',29:'WO'},
+  'PGIM023':{1:'WO',4:'DH',7:'WO',8:'WO',12:'CL',13:'SL',14:'WO',15:'WO',21:'WO',22:'WO',28:'WO',29:'WO'},
+  'PGLG024':{1:'WO',4:'DH',7:'WO',8:'WO',14:'WO',15:'WO',21:'WO',22:'WO',28:'WO',29:'WO'},
+  'PGIM030':{1:'WO',4:'DH',7:'WO',8:'WO',14:'WO',15:'WO',21:'WO',22:'WO',28:'WO',29:'WO'},
+  'PGDV031':{1:'WO',4:'DH',7:'WO',8:'WO',14:'WO',15:'WO',19:'CL',21:'WO',22:'WO',28:'WO',29:'WO'},
+  'PGIM032':{1:'WO',4:'DH',7:'WO',8:'WO',14:'WO',15:'WO',19:'CL',21:'WO',22:'WO',28:'WO',29:'WO'},
+  'PGIM033':{1:'WO',4:'DH',7:'WO',8:'WO',14:'WO',15:'WO',21:'WO',22:'WO',26:'NA',27:'NA',28:'WO',29:'WO',30:'NA'},
+  'PGIM035':{1:'WO',4:'DH',7:'WO',8:'WO',14:'WO',15:'WO',21:'WO',22:'WO',28:'WO',29:'WO'},
+  'PGBD027':{1:'WO',2:'P',3:'P',4:'P',5:'HD',6:'P',7:'WO',8:'WO',9:'CL',10:'P',11:'P',12:'P',13:'HD',14:'WO',15:'WO',16:'P',17:'P',18:'P',19:'P',20:'P',21:'WO',22:'WO',23:'P',24:'P',25:'P',26:'P',27:'P',28:'WO',29:'WO',30:'P',31:'HD'},
+  'PGBD028':{1:'WO',2:'P',3:'P',4:'P',5:'CL',6:'A',7:'WO',8:'WO',9:'A',10:'P',11:'P',12:'P',13:'P',14:'WO',15:'WO',16:'A',17:'P',18:'P',19:'P',20:'P',21:'WO',22:'WO',23:'P',24:'P',25:'A',26:'P',27:'P',28:'WO',29:'WO',30:'P',31:'P'},
+  'PGBD029':{1:'WO',2:'A',3:'P',4:'P',5:'A',6:'A',7:'WO',8:'WO',9:'HD',10:'P',11:'P',12:'P',13:'HD',14:'WO',15:'WO',16:'A',17:'NA',18:'NA',19:'NA',20:'NA',21:'WO',22:'WO',23:'NA',24:'NA',25:'NA',26:'NA',27:'NA',28:'WO',29:'WO',30:'NA'},
+  'PGIM036':{1:'WO',3:'CL',4:'DH',5:'NA',6:'NA',7:'WO',8:'WO',9:'NA',10:'NA',11:'NA',12:'NA',13:'NA',14:'WO',15:'WO',16:'NA',17:'NA',18:'NA',19:'NA',20:'NA',21:'WO',22:'WO',23:'NA',24:'NA',25:'NA',26:'NA',27:'NA',28:'WO',29:'WO',30:'NA'},
+  'PGLG037':{1:'WO',4:'DH',7:'WO',8:'WO',14:'WO',15:'WO',21:'WO',22:'WO',28:'WO',29:'WO'},
+  'PGIM038':{1:'WO',4:'DH',5:'NA',6:'NA',7:'WO',8:'WO',9:'NA',10:'NA',11:'NA',12:'NA',13:'NA',14:'WO',15:'WO',16:'NA',17:'NA',18:'NA',19:'NA',20:'NA',21:'WO',22:'WO',23:'NA',24:'NA',25:'NA',26:'NA',27:'NA',28:'WO',29:'WO',30:'NA'},
+  'PGIM039':{1:'WO',4:'DH',5:'CL',6:'A',7:'WO',8:'WO',14:'WO',15:'WO',21:'WO',22:'WO',22:'NA',23:'NA',24:'NA',25:'NA',26:'NA',27:'NA',28:'WO',29:'WO',30:'NA'},
+  'PGLG040':{1:'WO',4:'DH',7:'WO',8:'WO',14:'WO',15:'WO',21:'WO',22:'WO',28:'WO',29:'WO'},
+  'PGBD041':{1:'WO',7:'WO',8:'WO',14:'WO',15:'WO',16:'NH',21:'WO',22:'WO',28:'WO',29:'WO'},
+  'PGIM042':{1:'WO',2:'NA',3:'NA',4:'NA',5:'NA',6:'NA',7:'WO',8:'WO',9:'NA',10:'NA',11:'P',12:'P',13:'P',14:'WO',15:'WO',16:'P',17:'P',18:'P',19:'P',20:'P',21:'WO',22:'WO',23:'P',28:'WO',29:'WO'},
+  'PGDV019':{1:'WO',4:'DH',7:'WO',8:'WO',14:'WO',15:'WO',21:'WO',22:'WO',28:'WO',29:'WO'},
+  'PGIM015':{1:'WO',4:'DH',7:'WO',8:'WO',14:'WO',15:'WO',21:'WO',22:'WO',28:'WO',29:'WO'},
+  'PGHR001':{1:'WO',7:'WO',8:'WO',14:'WO',15:'WO',21:'WO',22:'WO',28:'WO',29:'WO'},
+  'PGSA001':{1:'WO',7:'WO',8:'WO',14:'WO',15:'WO',21:'WO',22:'WO',28:'WO',29:'WO'},
+};
+
+// Holidays 2026
+const HOLIDAYS_DAY = [
+  {date:'2026-01-01',occasion:'New Year\'s Day',type:'fixed'},
+  {date:'2026-01-15',occasion:'Makar Sankranti',type:'fixed'},
+  {date:'2026-01-26',occasion:'Republic Day',type:'fixed'},
+  {date:'2026-03-03',occasion:'Holi',type:'fixed'},
+  {date:'2026-03-26',occasion:'Ram Navami',type:'optional'},
+  {date:'2026-05-01',occasion:'May Day',type:'fixed'},
+  {date:'2026-05-27',occasion:'Id-ul-Zuha / Bakrid',type:'fixed'},
+  {date:'2026-09-04',occasion:'Janmashtami',type:'optional'},
+  {date:'2026-10-02',occasion:'Mahatma Gandhi Jayanti',type:'fixed'},
+  {date:'2026-10-20',occasion:'Dussehra',type:'fixed'},
+  {date:'2026-11-09',occasion:'Diwali',type:'fixed'},
+  {date:'2026-12-25',occasion:'Christmas',type:'fixed'},
+];
+const HOLIDAYS_NIGHT = [
+  {date:'2026-01-01',occasion:'New Year\'s Day',type:'fixed'},
+  {date:'2026-01-19',occasion:'Martin Luther King Jr. Day',type:'fixed'},
+  {date:'2026-02-16',occasion:'Washington\'s Birthday',type:'fixed'},
+  {date:'2026-07-03',occasion:'Independence Day (Observed)',type:'fixed'},
+  {date:'2026-09-07',occasion:'Labor Day',type:'fixed'},
+  {date:'2026-11-09',occasion:'Diwali',type:'fixed'},
+  {date:'2026-11-26',occasion:'Thanksgiving Day',type:'fixed'},
+  {date:'2026-11-27',occasion:'Thanksgiving Day',type:'fixed'},
+  {date:'2026-12-24',occasion:'Christmas Eve',type:'fixed'},
+  {date:'2026-12-25',occasion:'Christmas Day',type:'fixed'},
+  {date:'2026-12-31',occasion:'New Year\'s Eve',type:'fixed'},
+];
+
+// Leave requests
+let LEAVES = [
+  {id:'LV001',empId:'PGIM007',type:'CL',from:'2026-01-23',to:'2026-01-23',days:1,reason:'Personal',status:'approved',appliedOn:'2026-01-22',comment:''},
+  {id:'LV002',empId:'PGBD027',type:'SL',from:'2026-02-06',to:'2026-02-06',days:1,reason:'Sick',status:'approved',appliedOn:'2026-02-06',comment:''},
+  {id:'LV003',empId:'PGPM014',type:'CL',from:'2026-03-09',to:'2026-03-09',days:1,reason:'Personal',status:'approved',appliedOn:'2026-03-08',comment:''},
+  {id:'LV004',empId:'PGIM023',type:'CL',from:'2026-04-12',to:'2026-04-13',days:2,reason:'Personal work',status:'pending',appliedOn:'2026-04-11',comment:''},
+  {id:'LV005',empId:'PGPM017',type:'CL',from:'2026-04-12',to:'2026-04-13',days:2,reason:'Family function',status:'pending',appliedOn:'2026-04-10',comment:''},
+  {id:'LV006',empId:'PGIM007',type:'CL',from:'2026-04-23',to:'2026-04-23',days:1,reason:'Personal',status:'pending',appliedOn:'2026-04-20',comment:''},
+];
+let lvCounter = 7;
+let NOTIFICATIONS = [];
+
+// Incentive submissions
+let AM_INCENTIVES = [
+  {id:'AMI001',empId:'PGPM014',month:'2026-03',portfolioValue:6000,currentValue:5700,retentionPct:95,upsells:[{desc:'SEO add-on',usd:300,type:'recurring',payStatus:'full'}],advocacies:[{type:'video',approved:true},{type:'clutch',approved:true}],status:'approved',submittedOn:'2026-04-01',managerComment:'',calculatedIncentive:10400},
+  {id:'AMI002',empId:'PGPM017',month:'2026-03',portfolioValue:3500,currentValue:3150,retentionPct:90,upsells:[{desc:'Web dev',usd:200,type:'one-time',payStatus:'full'}],advocacies:[],status:'pending',submittedOn:'2026-04-05',managerComment:'',calculatedIncentive:0},
+];
+let amiCounter = 3;
+
+let BD_INCENTIVES = [
+  {id:'BDI001',empId:'PGBD027',month:'2026-03',sales:[{plan:'Gold',usd:990,discount:10,type:'recurring',webTsv:0},{plan:'Silver',usd:590,discount:0,type:'recurring',webTsv:0}],webSales:[],secondVoice:[],totalRecurring:1580,totalWeb:0,status:'approved',submittedOn:'2026-04-01',managerComment:'',dailyIncentive:3960,monthlyIncentive:2500},
+  {id:'BDI002',empId:'PGBD028',month:'2026-03',sales:[{plan:'Platinum',usd:1890,discount:5,type:'recurring',webTsv:0}],webSales:[],secondVoice:[],totalRecurring:1890,totalWeb:0,status:'pending',submittedOn:'2026-04-08',managerComment:'',dailyIncentive:8505,monthlyIncentive:2500},
+  {id:'BDI003',empId:'PGBD029',month:'2026-03',sales:[],webSales:[],secondVoice:[],totalRecurring:0,totalWeb:0,status:'rejected',submittedOn:'2026-04-06',managerComment:'Below minimum threshold',dailyIncentive:0,monthlyIncentive:0},
+];
+let bdiCounter = 4;
+
+let currentUser = null;
+let currentPage = 'dashboard';
+
+// ═══════════════════════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════════════════════
+function getEmp(id){return EMPLOYEES.find(e=>e.empId===id);}
+function getEmpByEmail(email){return EMPLOYEES.find(e=>e.email===email);}
+function initials(e){if(!e)return'?';return((e.firstName||'')[0]+(e.lastName||'')[0]||'').toUpperCase();}
+function fmtDate(d){if(!d)return'—';const dt=new Date(d);return dt.toLocaleDateString('en-IN',{day:'2-digit',month:'short',year:'numeric'});}
+function daysBetween(a,b){return Math.round((new Date(b)-new Date(a))/86400000)+1;}
+function greeting(){const h=new Date().getHours();return h<12?'morning':h<17?'afternoon':'evening';}
+function cap(s){return s?s.charAt(0).toUpperCase()+s.slice(1):'';}
+const COLORS=['#4f8ef7','#22c55e','#f59e0b','#ef4444','#7c5cfc','#06b6d4','#ec4899','#f97316','#a855f7','#14b8a6'];
+function empColor(id){const n=parseInt((id||'0').replace(/\D/g,''))%COLORS.length;return COLORS[n];}
+function toast(msg,type='info'){
+  const t=document.getElementById('toast');
+  t.innerHTML=(type==='success'?'✅ ':type==='error'?'❌ ':'ℹ️ ')+msg;
+  t.style.display='block';
+  t.style.borderColor=type==='success'?'rgba(34,197,94,0.4)':type==='error'?'rgba(239,68,68,0.4)':'var(--border)';
+  clearTimeout(t._timer);t._timer=setTimeout(()=>{t.style.display='none';},3500);
+}
+function addNotif(empId,msg){NOTIFICATIONS.unshift({id:Date.now(),empId,msg,time:new Date().toLocaleTimeString('en-IN',{hour:'2-digit',minute:'2-digit'}),read:false});}
+function pendingCount(id){
+  if(id==='approvals')return LEAVES.filter(l=>l.status==='pending').length;
+  if(id==='am-approvals')return AM_INCENTIVES.filter(i=>i.status==='pending').length;
+  if(id==='bd-approvals')return BD_INCENTIVES.filter(i=>i.status==='pending').length;
+  if(id==='notifications')return NOTIFICATIONS.filter(n=>n.empId===currentUser.empId&&!n.read).length;
+  return 0;
+}
+function getLeaveBalance(empId,type){
+  const base=LEAVE_BALANCES[empId]||{CL:2,SL:1};
+  const used=LEAVES.filter(l=>l.empId===empId&&l.type===type&&l.status==='approved').reduce((s,l)=>s+l.days,0);
+  const bal=base[type]||0;
+  return{balance:Math.max(0,bal-used),used,base:bal};
+}
+
+// Attendance helper: get status for a day
+function getAttStatus(empId,day){
+  const att=ATTENDANCE[empId]||{};
+  if(att[day]!==undefined)return att[day];
+  // Default: blank = P (present) on working days (Mon-Fri), WO on Sat/Sun
+  const d=new Date(2026,3,day); // April 2026
+  if(d.getDay()===0||d.getDay()===6)return 'WO';
+  return 'P';
+}
+
+function attCell(code){
+  const label=code||'P';
+  const cls=`att-${label}`;
+  return`<span class="att-cell ${cls}" title="${label}">${label}</span>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// AUTH
+// ═══════════════════════════════════════════════════════
+function doLogin(){
+  const emailInput=document.getElementById('login-email').value.trim().toLowerCase();
+  const pass=document.getElementById('login-pass').value.trim();
+  const emp=EMPLOYEES.find(e=>e.email.toLowerCase()===emailInput&&e.password===pass);
+  if(!emp){document.getElementById('login-error').style.display='block';return;}
+  currentUser=emp;
+  document.getElementById('login-screen').style.display='none';
+  const appEl=document.getElementById('app');
+  appEl.style.display='flex';
+  appEl.style.flexDirection='column';
+  appEl.style.minHeight='100vh';
+  setupTopbar();setupSidebar();navigate('dashboard');
+}
+function doLogout(){
+  currentUser=null;
+  document.getElementById('app').style.display='none';
+  const ls=document.getElementById('login-screen');
+  ls.style.display='flex';
+  ls.style.alignItems='center';
+  ls.style.justifyContent='center';
+  ls.style.minHeight='100vh';
+  document.getElementById('login-error').style.display='none';
+  document.getElementById('login-email').value='';
+  document.getElementById('login-pass').value='progoez123';
+}
+['login-email','login-pass'].forEach(id=>document.getElementById(id).addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();}));
+
+// ═══════════════════════════════════════════════════════
+// TOPBAR & SIDEBAR
+// ═══════════════════════════════════════════════════════
+function setupTopbar(){
+  const emp=currentUser;
+  document.getElementById('topbar-name').textContent=emp.firstName+' '+emp.lastName;
+  const rl={employee:'Employee',manager:'Manager',hradmin:'HR Admin',superadmin:'Super Admin'};
+  const rc={employee:'role-employee',manager:'role-manager',hradmin:'role-hradmin',superadmin:'role-superadmin'};
+  const rb=document.getElementById('topbar-role');rb.textContent=rl[emp.role];rb.className='role-badge '+rc[emp.role];
+  const av=document.getElementById('topbar-avatar');av.textContent=initials(emp);
+  av.style.background=`linear-gradient(135deg,${empColor(emp.empId)},${empColor(emp.empId)}88)`;
+}
+
+function setupSidebar(){
+  const r=currentUser.role;
+  const isAdmin=r==='hradmin'||r==='superadmin';
+  const isManager=r==='manager'||isAdmin;
+  const isBD=currentUser.dept==='Business Development';
+  const isAM=currentUser.dept==='Account Management';
+  const items=[
+    {sec:'MAIN'},
+    {id:'dashboard',icon:'🏠',label:'Dashboard'},
+    {id:'my-profile',icon:'👤',label:'My Profile'},
+    {id:'leave-request',icon:'📋',label:'Request Leave'},
+    {id:'my-leaves',icon:'📅',label:'My Leaves'},
+    {id:'attendance',icon:'📊',label:'Attendance'},
+    {id:'holidays',icon:'🗓️',label:'Holiday Calendar'},
+    {id:'notifications',icon:'🔔',label:'Notifications',badge:true},
+    ...(isManager||isBD||isAM?[{sec:'TEAM / INCENTIVES'}]:[]),
+    ...(isManager?[{id:'approvals',icon:'✅',label:'Leave Approvals',badge:true}]:[]),
+    ...(isAM||isAdmin?[{id:'am-incentive',icon:'💰',label:'AM Incentive'}]:[]),
+    ...(isBD||isAdmin?[{id:'bd-incentive',icon:'📈',label:'BD Incentive'}]:[]),
+    ...(isManager?[{id:'am-approvals',icon:'✅',label:'AM Approvals',badge:true},{id:'bd-approvals',icon:'✅',label:'BD Approvals',badge:true}]:[]),
+    ...(isAdmin?[{sec:'ADMIN'},{id:'directory',icon:'👥',label:'Employee Directory'},{id:'all-leaves',icon:'📊',label:'Leave Overview'},{id:'all-incentives',icon:'💹',label:'Incentive Dashboard'},{id:'admin-panel',icon:'⚙️',label:'Admin Panel'}]:[]),
+  ];
+  document.getElementById('sidebar').innerHTML=items.map(item=>{
+    if(item.sec)return`<div class="sidebar-section">${item.sec}</div>`;
+    const cnt=item.badge?pendingCount(item.id):0;
+    return`<div class="nav-item" id="nav-${item.id}" onclick="navigate('${item.id}')">
+      <span class="nav-icon">${item.icon}</span>${item.label}
+      ${cnt>0?`<span class="nav-badge">${cnt}</span>`:''}
+    </div>`;
+  }).join('');
+  if(document.getElementById('nav-'+currentPage))document.getElementById('nav-'+currentPage).classList.add('active');
+}
+
+// ═══════════════════════════════════════════════════════
+// ROUTER
+// ═══════════════════════════════════════════════════════
+function navigate(page){
+  currentPage=page;
+  const pages={
+    'dashboard':renderDashboard,'my-profile':renderMyProfile,'leave-request':renderLeaveRequest,
+    'my-leaves':renderMyLeaves,'attendance':renderAttendance,'holidays':renderHolidays,
+    'notifications':renderNotifications,'approvals':renderApprovals,
+    'am-incentive':renderAMIncentive,'bd-incentive':renderBDIncentive,
+    'am-approvals':renderAMApprovals,'bd-approvals':renderBDApprovals,
+    'directory':renderDirectory,'all-leaves':renderAllLeaves,
+    'all-incentives':renderAllIncentives,'admin-panel':renderAdminPanel,
+  };
+  document.getElementById('main-content').innerHTML=pages[page]?pages[page]():`<p style="color:var(--muted)">Page not found</p>`;
+  setupSidebar();
+  // post-render hooks
+  if(page==='leave-request')setTimeout(()=>{updateLvBalance();calcDays();},30);
+}
+
+// ═══════════════════════════════════════════════════════
+// DASHBOARD
+// ═══════════════════════════════════════════════════════
+function renderDashboard(){
+  const emp=currentUser;
+  const ml=LEAVES.filter(l=>l.empId===emp.empId);
+  const clBal=getLeaveBalance(emp.empId,'CL');
+  const slBal=getLeaveBalance(emp.empId,'SL');
+  const isAdmin=emp.role==='hradmin'||emp.role==='superadmin';
+  const isManager=emp.role==='manager'||isAdmin;
+  const isBD=emp.dept==='Business Development';
+  const isAM=emp.dept==='Account Management';
+
+  let extraCards='';
+  if(isBD){
+    const myBD=BD_INCENTIVES.filter(i=>i.empId===emp.empId);
+    const pending=myBD.filter(i=>i.status==='pending').reduce((s,i)=>s+i.dailyIncentive+i.monthlyIncentive,0);
+    const paid=myBD.filter(i=>i.status==='approved').reduce((s,i)=>s+i.dailyIncentive+i.monthlyIncentive,0);
+    extraCards=`<div class="stat-card"><div class="stat-icon">📈</div><div class="inc-pending">₹${paid.toLocaleString('en-IN')}</div><div class="stat-label">BD Incentive Approved</div></div>
+    <div class="stat-card"><div class="stat-icon">⏳</div><div class="stat-val" style="color:var(--orange)">₹${pending.toLocaleString('en-IN')}</div><div class="stat-label">BD Incentive Pending</div></div>`;
+  } else if(isAM){
+    const myAM=AM_INCENTIVES.filter(i=>i.empId===emp.empId);
+    const pending=myAM.filter(i=>i.status==='pending').reduce((s,i)=>s+i.calculatedIncentive,0);
+    const paid=myAM.filter(i=>i.status==='approved').reduce((s,i)=>s+i.calculatedIncentive,0);
+    extraCards=`<div class="stat-card"><div class="stat-icon">💰</div><div class="inc-pending">₹${paid.toLocaleString('en-IN')}</div><div class="stat-label">AM Incentive Approved</div></div>
+    <div class="stat-card"><div class="stat-icon">⏳</div><div class="stat-val" style="color:var(--orange)">₹${pending.toLocaleString('en-IN')}</div><div class="stat-label">AM Incentive Pending</div></div>`;
+  } else if(isManager){
+    const totalPending=LEAVES.filter(l=>l.status==='pending').length;
+    extraCards=`<div class="stat-card"><div class="stat-icon">⏳</div><div class="stat-val" style="color:var(--orange)">${totalPending}</div><div class="stat-label">Leaves Pending Approval</div></div>`;
+  }
+
+  const recent=[...ml].sort((a,b)=>new Date(b.appliedOn)-new Date(a.appliedOn)).slice(0,5);
+
+  return`
+  <div class="page-title">Good ${greeting()}, ${emp.firstName} 👋</div>
+  <div class="page-sub">${new Date().toLocaleDateString('en-IN',{weekday:'long',day:'numeric',month:'long',year:'numeric'})}</div>
+  <div class="grid4">
+    <div class="stat-card"><div class="stat-icon">🏖️</div><div class="stat-val" style="color:var(--accent)">${clBal.balance}</div><div class="stat-label">Casual Leave Balance</div></div>
+    <div class="stat-card"><div class="stat-icon">🤒</div><div class="stat-val" style="color:var(--cyan)">${emp.type==='Intern'?'N/A':slBal.balance}</div><div class="stat-label">Sick Leave Balance</div></div>
+    <div class="stat-card"><div class="stat-icon">📋</div><div class="stat-val">${ml.filter(l=>l.status==='pending').length}</div><div class="stat-label">Pending Requests</div></div>
+    ${extraCards||`<div class="stat-card"><div class="stat-icon">✅</div><div class="stat-val" style="color:var(--green)">${ml.filter(l=>l.status==='approved').length}</div><div class="stat-label">Approved Leaves</div></div>`}
+  </div>
+
+  <div class="card">
+    <div class="section-title">📅 My Recent Leaves</div>
+    ${recent.length===0?`<p style="color:var(--muted);font-size:14px">No leaves yet. <span style="color:var(--accent);cursor:pointer" onclick="navigate('leave-request')">Apply now →</span></p>`:
+    `<div class="table-wrap"><table>
+      <thead><tr><th>Type</th><th>From</th><th>To</th><th>Days</th><th>Status</th><th>Applied</th></tr></thead>
+      <tbody>${recent.map(l=>`<tr>
+        <td><span style="font-weight:700;color:${l.type==='CL'?'var(--accent)':'var(--cyan)'}">${l.type==='CL'?'Casual Leave':'Sick Leave'}</span></td>
+        <td>${fmtDate(l.from)}</td><td>${fmtDate(l.to)}</td><td>${l.days}</td>
+        <td><span class="status-pill status-${l.status}"><span class="dot"></span>${cap(l.status)}</span></td>
+        <td>${fmtDate(l.appliedOn)}</td>
+      </tr>`).join('')}</tbody>
+    </table></div>`}
+  </div>
+
+  ${isAdmin?renderAdminDashboardSummary():''}`;
+}
+
+function renderAdminDashboardSummary(){
+  const active=EMPLOYEES.filter(e=>e.active&&e.role!=='hradmin'&&e.role!=='superadmin').length;
+  const totalBDApproved=BD_INCENTIVES.filter(i=>i.status==='approved').reduce((s,i)=>s+i.dailyIncentive+i.monthlyIncentive,0);
+  const totalAMApproved=AM_INCENTIVES.filter(i=>i.status==='approved').reduce((s,i)=>s+i.calculatedIncentive,0);
+  return`
+  <div class="grid3">
+    <div class="stat-card"><div class="stat-icon">👥</div><div class="stat-val">${active}</div><div class="stat-label">Active Employees</div></div>
+    <div class="stat-card"><div class="stat-icon">💰</div><div class="inc-pending" style="font-size:22px">₹${totalAMApproved.toLocaleString('en-IN')}</div><div class="stat-label">AM Incentives Approved (Total)</div></div>
+    <div class="stat-card"><div class="stat-icon">📈</div><div class="inc-pending" style="font-size:22px">₹${totalBDApproved.toLocaleString('en-IN')}</div><div class="stat-label">BD Incentives Approved (Total)</div></div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// MY PROFILE
+// ═══════════════════════════════════════════════════════
+function renderMyProfile(){
+  const emp=currentUser;
+  const rl={employee:'Employee',manager:'Manager',hradmin:'HR Admin',superadmin:'Super Admin'};
+  const clBal=getLeaveBalance(emp.empId,'CL');
+  const slBal=getLeaveBalance(emp.empId,'SL');
+  return`
+  <div class="page-title">My Profile</div>
+  <div class="page-sub">Your employee record.</div>
+  <div class="profile-header">
+    <div class="profile-avatar" style="background:linear-gradient(135deg,${empColor(emp.empId)},${empColor(emp.empId)}88)">${initials(emp)}</div>
+    <div>
+      <div class="profile-name">${emp.firstName} ${emp.lastName}</div>
+      <div class="profile-title-text">${emp.title} · ${emp.dept}</div>
+      <div class="profile-tags">
+        <span class="tag tag-blue">${emp.empId}</span>
+        <span class="tag tag-green">${emp.type}</span>
+        <span class="tag tag-orange">${rl[emp.role]}</span>
+        <span class="tag tag-muted">${emp.shift} Shift</span>
+        ${emp.alias&&emp.alias!=='NA'?`<span class="tag tag-muted">Alias: ${emp.alias}</span>`:''}
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="section-title">Employee Details</div>
+    <div class="profile-grid">
+      ${pf('Employee ID',`<span style="font-family:'DM Mono',monospace">${emp.empId}</span>`)}${pf('Full Name',`${emp.firstName} ${emp.lastName}`)}
+      ${pf('Department',emp.dept)}${pf('Title',emp.title)}
+      ${pf('Email',emp.email)}${pf('Employment Type',emp.type)}
+      ${pf('Joining Date',fmtDate(emp.joining))}${pf('Shift',emp.shift+' Shift')}
+      ${pf('CL Balance',`<span style="color:var(--accent);font-weight:700">${clBal.balance} days</span> (${clBal.used} used)`)}${pf('SL Balance',emp.type==='Intern'?'<span style="color:var(--muted)">Not Applicable</span>':`<span style="color:var(--cyan);font-weight:700">${slBal.balance} days</span> (${slBal.used} used)`)}
+    </div>
+  </div>`;
+}
+function pf(label,val){return`<div class="profile-field"><div class="pf-label">${label}</div><div class="pf-val">${val}</div></div>`;}
+
+// ═══════════════════════════════════════════════════════
+// LEAVE REQUEST
+// ═══════════════════════════════════════════════════════
+function renderLeaveRequest(){
+  return`
+  <div class="page-title">Request Leave</div>
+  <div class="page-sub">Submit a leave application for manager approval.</div>
+  <div class="card" style="max-width:600px">
+    <div class="section-title">New Application</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Leave Type</label>
+        <select class="form-input" id="lv-type" onchange="updateLvBalance()">
+          <option value="CL">Casual Leave</option>
+          ${currentUser.type!=='Intern'?'<option value="SL">Sick Leave</option>':''}
+        </select>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Balance Available</label>
+        <input class="form-input" id="lv-balance" readonly style="opacity:0.65;cursor:default" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">From Date</label>
+        <input type="date" class="form-input" id="lv-from" onchange="calcDays()" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">To Date</label>
+        <input type="date" class="form-input" id="lv-to" onchange="calcDays()" />
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-label">Duration</label>
+      <input class="form-input" id="lv-days" readonly style="opacity:0.65;cursor:default" placeholder="Select dates to calculate" />
+    </div>
+    <div class="form-group">
+      <label class="form-label">Reason</label>
+      <textarea class="form-input" id="lv-reason" placeholder="Briefly describe the reason..."></textarea>
+    </div>
+    <button class="btn-submit" onclick="submitLeave()">Submit Application</button>
+  </div>`;
+}
+function updateLvBalance(){
+  const t=document.getElementById('lv-type');const b=document.getElementById('lv-balance');
+  if(!t||!b)return;
+  const bal=getLeaveBalance(currentUser.empId,t.value);
+  b.value=bal.balance+' days remaining';
+}
+function calcDays(){
+  const f=document.getElementById('lv-from')?.value;
+  const t=document.getElementById('lv-to')?.value;
+  const el=document.getElementById('lv-days');if(!el)return;
+  if(f&&t&&t>=f){const d=daysBetween(f,t);el.value=d+' day'+(d!==1?'s':'');}
+  else el.value='';
+  updateLvBalance();
+}
+function submitLeave(){
+  const type=document.getElementById('lv-type').value;
+  const from=document.getElementById('lv-from').value;
+  const to=document.getElementById('lv-to').value;
+  const reason=document.getElementById('lv-reason').value.trim();
+  if(!from||!to){toast('Please select dates','error');return;}
+  if(to<from){toast('To date must be on/after from date','error');return;}
+  if(!reason){toast('Please provide a reason','error');return;}
+  const days=daysBetween(from,to);
+  const bal=getLeaveBalance(currentUser.empId,type);
+  if(days>bal.balance){toast(`Insufficient balance. You have ${bal.balance} day(s).`,'error');return;}
+  const id='LV0'+String(lvCounter++).padStart(2,'0');
+  LEAVES.push({id,empId:currentUser.empId,type,from,to,days,reason,status:'pending',appliedOn:new Date().toISOString().slice(0,10),comment:''});
+  addNotif('PGHR001',`${currentUser.firstName} ${currentUser.lastName} applied for ${type==='CL'?'Casual':'Sick'} Leave (${days}d): ${fmtDate(from)}.`);
+  toast('Leave application submitted!','success');
+  navigate('my-leaves');
+}
+
+// ═══════════════════════════════════════════════════════
+// MY LEAVES
+// ═══════════════════════════════════════════════════════
+function renderMyLeaves(){
+  const leaves=LEAVES.filter(l=>l.empId===currentUser.empId).sort((a,b)=>new Date(b.appliedOn)-new Date(a.appliedOn));
+  return`
+  <div class="page-title">My Leave History</div>
+  <div class="page-sub">All your leave applications and their status.</div>
+  <div class="card">
+    ${leaves.length===0?`<p style="color:var(--muted)">No applications yet. <span style="color:var(--accent);cursor:pointer" onclick="navigate('leave-request')">Apply for leave →</span></p>`:
+    `<div class="table-wrap"><table>
+      <thead><tr><th>Type</th><th>From</th><th>To</th><th>Days</th><th>Reason</th><th>Status</th><th>Applied</th><th>Comment</th></tr></thead>
+      <tbody>${leaves.map(l=>`<tr>
+        <td><span style="font-weight:700;color:${l.type==='CL'?'var(--accent)':'var(--cyan)'}">${l.type==='CL'?'Casual Leave':'Sick Leave'}</span></td>
+        <td>${fmtDate(l.from)}</td><td>${fmtDate(l.to)}</td><td>${l.days}</td>
+        <td style="color:var(--muted2)">${l.reason}</td>
+        <td><span class="status-pill status-${l.status}"><span class="dot"></span>${cap(l.status)}</span></td>
+        <td>${fmtDate(l.appliedOn)}</td>
+        <td style="font-size:12px;color:var(--muted2)">${l.comment||'—'}</td>
+      </tr>`).join('')}</tbody>
+    </table></div>`}
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// ATTENDANCE
+// ═══════════════════════════════════════════════════════
+function renderAttendance(){
+  const emp=currentUser;
+  const isAdmin=emp.role==='hradmin'||emp.role==='superadmin';
+  const isManager=emp.role==='manager'||isAdmin;
+  const days=Array.from({length:30},(_,i)=>i+1);
+  const weekdays=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+  // April 2026 day headers
+  const headers=days.map(d=>{const dt=new Date(2026,3,d);return`<th style="min-width:36px;text-align:center"><div>${d}</div><div style="font-size:9px;color:var(--muted)">${weekdays[dt.getDay()]}</div></th>`;}).join('');
+
+  function empAttRow(e){
+    if(!e.active&&e.role!=='manager'&&e.role!=='superadmin'&&e.role!=='hradmin')return'';
+    const cells=days.map(d=>{ const s=getAttStatus(e.empId,d); return`<td style="text-align:center;padding:6px 2px">${attCell(s)}</td>`;}).join('');
+    return`<tr><td style="white-space:nowrap;padding:8px 14px"><div style="font-weight:600;font-size:13px">${e.firstName} ${e.lastName}</div><div class="emp-row-id">${e.empId}</div></td>${cells}</tr>`;
+  }
+
+  if(isAdmin||isManager){
+    const empList=isAdmin?EMPLOYEES.filter(e=>e.active):EMPLOYEES.filter(e=>e.active);
+    return`
+    <div class="page-title">Attendance — April 2026</div>
+    <div class="page-sub">Month-wise attendance for all active employees. Blank = Present (working day).</div>
+    <div class="info-box">Legend: <span class="att-cell att-P">P</span> Present &nbsp; <span class="att-cell att-A">A</span> Absent &nbsp; <span class="att-cell att-CL">CL</span> Casual Leave &nbsp; <span class="att-cell att-SL">SL</span> Sick Leave &nbsp; <span class="att-cell att-WO">WO</span> Weekend Off &nbsp; <span class="att-cell att-HD">HD</span> Half Day &nbsp; <span class="att-cell att-DH">DH</span> Day Shift Holiday &nbsp; <span class="att-cell att-NH">NH</span> Night Shift Holiday</div>
+    <div class="card" style="padding:0;overflow:hidden">
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th style="min-width:160px">Employee</th>${headers}</tr></thead>
+          <tbody>${empList.map(empAttRow).join('')}</tbody>
+        </table>
+      </div>
+    </div>`;
+  } else {
+    // Employee sees their own
+    const cells=days.map(d=>{const s=getAttStatus(emp.empId,d);const dt=new Date(2026,3,d);return`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border)">
+      <span style="font-size:13px">${d} Apr (${weekdays[dt.getDay()]})</span>
+      ${attCell(s)}
+    </div>`;}).join('');
+    const presents=days.filter(d=>getAttStatus(emp.empId,d)==='P').length;
+    const absents=days.filter(d=>getAttStatus(emp.empId,d)==='A').length;
+    const leaves=days.filter(d=>['CL','SL'].includes(getAttStatus(emp.empId,d))).length;
+    return`
+    <div class="page-title">My Attendance — April 2026</div>
+    <div class="page-sub">Your daily attendance record for this month.</div>
+    <div class="grid3">
+      <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-val" style="color:var(--green)">${presents}</div><div class="stat-label">Days Present</div></div>
+      <div class="stat-card"><div class="stat-icon">❌</div><div class="stat-val" style="color:var(--red)">${absents}</div><div class="stat-label">Days Absent</div></div>
+      <div class="stat-card"><div class="stat-icon">🏖️</div><div class="stat-val" style="color:var(--accent)">${leaves}</div><div class="stat-label">Leave Days</div></div>
+    </div>
+    <div class="card">${cells}</div>`;
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// HOLIDAYS
+// ═══════════════════════════════════════════════════════
+function renderHolidays(){
+  const shift=currentUser.shift;
+  const list=shift==='Night'?HOLIDAYS_NIGHT:HOLIDAYS_DAY;
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const weekdays=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+  return`
+  <div class="page-title">Holiday Calendar 2026</div>
+  <div class="page-sub">Your holidays based on <strong>${shift} Shift</strong>. Contact HR to update your shift assignment.</div>
+  <div class="tabs">
+    <div class="tab active" onclick="switchHolidayTab('day',this)">🌞 Day Shift</div>
+    <div class="tab" onclick="switchHolidayTab('night',this)">🌙 Night Shift (USA)</div>
+  </div>
+  <div id="holiday-day">
+    ${HOLIDAYS_DAY.map(h=>{
+      const d=new Date(h.date);
+      return`<div class="holiday-item">
+        <div class="holiday-date-box"><div class="holiday-day">${d.getDate()}</div><div class="holiday-month">${months[d.getMonth()]}</div></div>
+        <div><div class="holiday-name">${h.occasion}</div><div class="holiday-weekday">${weekdays[d.getDay()]}</div></div>
+        <span class="holiday-type-pill ${h.type==='fixed'?'holiday-fixed':'holiday-optional'}">${h.type==='fixed'?'Fixed':'Optional'}</span>
+      </div>`;
+    }).join('')}
+  </div>
+  <div id="holiday-night" style="display:none">
+    ${HOLIDAYS_NIGHT.map(h=>{
+      const d=new Date(h.date);
+      return`<div class="holiday-item">
+        <div class="holiday-date-box"><div class="holiday-day">${d.getDate()}</div><div class="holiday-month">${months[d.getMonth()]}</div></div>
+        <div><div class="holiday-name">${h.occasion}</div><div class="holiday-weekday">${weekdays[d.getDay()]}</div></div>
+        <span class="holiday-type-pill holiday-shift-night">Night Shift</span>
+      </div>`;
+    }).join('')}
+  </div>
+  <div class="info-box" style="margin-top:16px">ℹ️ Team members may select <strong>1 Optional/Restricted holiday</strong> per year as paid time off for personal, cultural, or religious observances.</div>`;
+}
+function switchHolidayTab(tab,el){
+  document.querySelectorAll('.tabs .tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById('holiday-day').style.display=tab==='day'?'block':'none';
+  document.getElementById('holiday-night').style.display=tab==='night'?'block':'none';
+}
+
+// ═══════════════════════════════════════════════════════
+// NOTIFICATIONS
+// ═══════════════════════════════════════════════════════
+function renderNotifications(){
+  const mine=NOTIFICATIONS.filter(n=>n.empId===currentUser.empId);
+  mine.forEach(n=>n.read=true);setupSidebar();
+  return`
+  <div class="page-title">Notifications</div>
+  <div class="page-sub">Your activity alerts.</div>
+  ${mine.length===0?'<div class="card"><p style="color:var(--muted)">No notifications yet.</p></div>':
+  mine.map(n=>`<div class="notif-item"><div class="notif-dot notif-read-dot"></div><div><div style="font-size:13px;line-height:1.5">${n.msg}</div><div style="font-size:11px;color:var(--muted);margin-top:3px;font-family:'DM Mono',monospace">${n.time}</div></div></div>`).join('')}`;
+}
+
+// ═══════════════════════════════════════════════════════
+// LEAVE APPROVALS
+// ═══════════════════════════════════════════════════════
+function renderApprovals(){
+  const pending=LEAVES.filter(l=>l.status==='pending');
+  const hist=LEAVES.filter(l=>l.status!=='pending').sort((a,b)=>new Date(b.appliedOn)-new Date(a.appliedOn));
+  return`
+  <div class="page-title">Leave Approvals</div>
+  <div class="page-sub">Review and action pending leave requests.</div>
+  <div class="card" style="margin-bottom:18px">
+    <div class="section-title">⏳ Pending (${pending.length})</div>
+    ${pending.length===0?'<p style="color:var(--muted)">✅ All clear!</p>':
+    `<div class="table-wrap"><table>
+      <thead><tr><th>Employee</th><th>Type</th><th>From</th><th>To</th><th>Days</th><th>Reason</th><th>Applied</th><th>Action</th></tr></thead>
+      <tbody>${pending.map(l=>{const e=getEmp(l.empId);return`<tr>
+        <td><div style="font-weight:600">${e?e.firstName+' '+e.lastName:'—'}</div><div class="emp-row-id">${l.empId}</div></td>
+        <td><span style="font-weight:700;color:${l.type==='CL'?'var(--accent)':'var(--cyan)'}">${l.type==='CL'?'CL':'SL'}</span></td>
+        <td>${fmtDate(l.from)}</td><td>${fmtDate(l.to)}</td><td>${l.days}</td>
+        <td style="color:var(--muted2)">${l.reason}</td><td>${fmtDate(l.appliedOn)}</td>
+        <td><button class="btn-sm btn-green" onclick="handleLeave('${l.id}','approved')">Approve</button> <button class="btn-sm btn-red" onclick="handleLeave('${l.id}','rejected')">Reject</button></td>
+      </tr>`;}).join('')}</tbody>
+    </table></div>`}
+  </div>
+  <div class="card">
+    <div class="section-title">History</div>
+    ${hist.length===0?'<p style="color:var(--muted)">No history yet.</p>':
+    `<div class="table-wrap"><table>
+      <thead><tr><th>Employee</th><th>Type</th><th>From</th><th>To</th><th>Days</th><th>Status</th><th>Applied</th></tr></thead>
+      <tbody>${hist.map(l=>{const e=getEmp(l.empId);return`<tr>
+        <td><div style="font-weight:600">${e?e.firstName+' '+e.lastName:'—'}</div></td>
+        <td>${l.type}</td><td>${fmtDate(l.from)}</td><td>${fmtDate(l.to)}</td><td>${l.days}</td>
+        <td><span class="status-pill status-${l.status}"><span class="dot"></span>${cap(l.status)}</span></td>
+        <td>${fmtDate(l.appliedOn)}</td>
+      </tr>`;}).join('')}</tbody>
+    </table></div>`}
+  </div>`;
+}
+function handleLeave(id,action){
+  const l=LEAVES.find(x=>x.id===id);if(!l)return;
+  l.status=action;
+  const e=getEmp(l.empId);
+  if(e)addNotif(e.empId,`Your ${l.type} request (${fmtDate(l.from)}) has been ${action} by ${currentUser.firstName}.`);
+  toast(`Leave ${action}!`,action==='approved'?'success':'error');
+  navigate('approvals');
+}
+
+// ═══════════════════════════════════════════════════════
+// AM INCENTIVE
+// ═══════════════════════════════════════════════════════
+function calcAMIncentive(data){
+  // Upsell incentive
+  let totalUsd=0;
+  data.upsells.forEach(u=>{
+    if(u.type==='recurring'){totalUsd+=u.usd/6;}
+    else {totalUsd+=u.usd;}
+  });
+  let slab=totalUsd<=500?5:totalUsd<=1500?10:15;
+  let upsellIncentive=Math.round(totalUsd*slab);
+  // Payment status adjustment
+  const allFull=data.upsells.every(u=>u.payStatus==='full');
+  const anyPartial=data.upsells.some(u=>u.payStatus==='partial');
+  if(anyPartial)upsellIncentive=Math.round(upsellIncentive*0.5);
+  if(data.upsells.some(u=>u.payStatus==='none'))upsellIncentive=0;
+
+  // Retention incentive (from 3rd month)
+  let retentionIncentive=0;
+  const pv=data.portfolioValue||0;
+  const ret=data.retentionPct||0;
+  if(ret>=85){
+    if(pv<=5000){retentionIncentive=3000;}
+    else if(ret>=96){retentionIncentive=12000;}
+    else if(ret>=91){retentionIncentive=8000;}
+    else if(ret>=89){retentionIncentive=6000;}
+    else {retentionIncentive=4000;}
+  }
+
+  // Advocacy
+  let advocacyIncentive=0;
+  if(ret>=85){
+    (data.advocacies||[]).forEach(a=>{
+      if(a.approved){advocacyIncentive+=a.type==='video'?500:300;}
+    });
+  }
+  return{upsellIncentive,retentionIncentive,advocacyIncentive,total:upsellIncentive+retentionIncentive+advocacyIncentive,usdTotal:totalUsd,slab};
+}
+
+function renderAMIncentive(){
+  const myRecords=AM_INCENTIVES.filter(i=>i.empId===currentUser.empId);
+  const isAdmin=currentUser.role==='hradmin'||currentUser.role==='superadmin';
+  const records=isAdmin?AM_INCENTIVES:myRecords;
+  return`
+  <div class="page-title">Account Management Incentive</div>
+  <div class="page-sub">Track and submit your monthly upsell, retention & advocacy rewards.</div>
+  <div class="tabs">
+    <div class="tab active" onclick="switchAMTab('submit',this)" id="tab-am-submit">Submit New</div>
+    <div class="tab" onclick="switchAMTab('history',this)" id="tab-am-history">My Records</div>
+    <div class="tab" onclick="switchAMTab('policy',this)" id="tab-am-policy">📋 Policy</div>
+  </div>
+
+  <div id="am-tab-submit">
+    ${renderAMSubmitForm()}
+  </div>
+  <div id="am-tab-history" style="display:none">
+    ${renderAMHistory(records)}
+  </div>
+  <div id="am-tab-policy" style="display:none">
+    ${renderAMPolicy()}
+  </div>`;
+}
+
+function renderAMSubmitForm(){
+  return`
+  <div class="card" style="max-width:700px">
+    <div class="section-title">New Incentive Submission</div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Month</label>
+        <input type="month" class="form-input" id="am-month" value="2026-04" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Portfolio Value (USD)</label>
+        <input type="number" class="form-input" id="am-portfolio" placeholder="e.g. 6000" oninput="recalcAM()" />
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label class="form-label">Current Portfolio Value (USD)</label>
+        <input type="number" class="form-input" id="am-current" placeholder="e.g. 5700" oninput="recalcAM()" />
+      </div>
+      <div class="form-group">
+        <label class="form-label">Retention % (auto-calculated)</label>
+        <input type="text" class="form-input" id="am-retention-display" readonly style="opacity:0.7" />
+      </div>
+    </div>
+    <div class="divider"></div>
+    <div class="section-title" style="font-size:13px">Upsells This Month</div>
+    <div id="am-upsells-list"></div>
+    <button class="btn-sm btn-blue" onclick="addAMUpsell()" style="margin-bottom:16px">+ Add Upsell</button>
+    <div class="divider"></div>
+    <div class="section-title" style="font-size:13px">Advocacy Activities</div>
+    <div id="am-advocacy-list"></div>
+    <button class="btn-sm btn-blue" onclick="addAMAdvocacy()" style="margin-bottom:16px">+ Add Advocacy</button>
+    <div class="divider"></div>
+    <div id="am-calc-result" class="info-box" style="display:none"></div>
+    <div style="display:flex;gap:12px;align-items:center;margin-top:8px">
+      <button class="btn-sm btn-blue" onclick="recalcAM()" style="padding:8px 20px">Calculate</button>
+      <button class="btn-submit" onclick="submitAMIncentive()">Submit for Approval</button>
+    </div>
+  </div>`;
+}
+let amUpsells=[];let amAdvocacies=[];
+function addAMUpsell(){
+  amUpsells.push({id:Date.now(),desc:'',usd:0,type:'recurring',payStatus:'full'});
+  renderAMUpsellList();
+}
+function removeAMUpsell(id){amUpsells=amUpsells.filter(u=>u.id!==id);renderAMUpsellList();}
+function renderAMUpsellList(){
+  const el=document.getElementById('am-upsells-list');if(!el)return;
+  el.innerHTML=amUpsells.map(u=>`
+  <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:8px;align-items:center;margin-bottom:8px">
+    <input class="form-input" placeholder="Description" value="${u.desc}" oninput="amUpsells.find(x=>x.id===${u.id}).desc=this.value;recalcAM()" />
+    <input type="number" class="form-input" placeholder="USD" value="${u.usd||''}" oninput="amUpsells.find(x=>x.id===${u.id}).usd=+this.value;recalcAM()" />
+    <select class="form-input" onchange="amUpsells.find(x=>x.id===${u.id}).type=this.value;recalcAM()">
+      <option value="recurring" ${u.type==='recurring'?'selected':''}>Recurring (÷6)</option>
+      <option value="one-time" ${u.type==='one-time'?'selected':''}>One-Time</option>
+    </select>
+    <select class="form-input" onchange="amUpsells.find(x=>x.id===${u.id}).payStatus=this.value;recalcAM()">
+      <option value="full" ${u.payStatus==='full'?'selected':''}>100% paid</option>
+      <option value="partial" ${u.payStatus==='partial'?'selected':''}>≥50% paid</option>
+      <option value="none" ${u.payStatus==='none'?'selected':''}>< 50% paid</option>
+    </select>
+    <button class="btn-sm btn-red" onclick="removeAMUpsell(${u.id})">×</button>
+  </div>`).join('');
+}
+function addAMAdvocacy(){amAdvocacies.push({id:Date.now(),type:'video',approved:true});renderAMAdvocacyList();}
+function removeAMAdvocacy(id){amAdvocacies=amAdvocacies.filter(a=>a.id!==id);renderAMAdvocacyList();}
+function renderAMAdvocacyList(){
+  const el=document.getElementById('am-advocacy-list');if(!el)return;
+  el.innerHTML=amAdvocacies.map(a=>`
+  <div style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center;margin-bottom:8px">
+    <select class="form-input" onchange="amAdvocacies.find(x=>x.id===${a.id}).type=this.value">
+      <option value="video" ${a.type==='video'?'selected':''}>Video Testimonial (₹500)</option>
+      <option value="clutch" ${a.type==='clutch'?'selected':''}>Clutch Review (₹300)</option>
+    </select>
+    <button class="btn-sm btn-red" onclick="removeAMAdvocacy(${a.id})">×</button>
+  </div>`).join('');
+}
+function recalcAM(){
+  const portfolio=+document.getElementById('am-portfolio')?.value||0;
+  const current=+document.getElementById('am-current')?.value||0;
+  const retDisplay=document.getElementById('am-retention-display');
+  let ret=portfolio>0?Math.round((current/portfolio)*100):0;
+  if(retDisplay)retDisplay.value=portfolio>0?ret+'%':'—';
+  const data={portfolioValue:portfolio,currentValue:current,retentionPct:ret,upsells:amUpsells,advocacies:amAdvocacies};
+  const calc=calcAMIncentive(data);
+  const el=document.getElementById('am-calc-result');
+  if(el){
+    el.style.display='block';
+    el.innerHTML=`
+    <strong>Estimated Incentive Breakdown</strong><br>
+    Upsell (USD ${calc.usdTotal.toFixed(0)} × ₹${calc.slab}/USD): <strong>₹${calc.upsellIncentive.toLocaleString('en-IN')}</strong><br>
+    Retention (${ret}%): <strong>₹${calc.retentionIncentive.toLocaleString('en-IN')}</strong><br>
+    Advocacy: <strong>₹${calc.advocacyIncentive.toLocaleString('en-IN')}</strong><br>
+    <span style="color:var(--green);font-size:16px;font-weight:700">Total: ₹${calc.total.toLocaleString('en-IN')}</span>
+    <span style="color:var(--muted);font-size:11px;margin-left:8px">(Status: Pending manager approval)</span>`;
+  }
+}
+function submitAMIncentive(){
+  const month=document.getElementById('am-month')?.value;
+  const portfolio=+document.getElementById('am-portfolio')?.value||0;
+  const current=+document.getElementById('am-current')?.value||0;
+  if(!month||!portfolio||!current){toast('Please fill all required fields','error');return;}
+  const ret=Math.round((current/portfolio)*100);
+  const data={portfolioValue:portfolio,currentValue:current,retentionPct:ret,upsells:amUpsells,advocacies:amAdvocacies};
+  const calc=calcAMIncentive(data);
+  const id='AMI0'+String(amiCounter++).padStart(2,'0');
+  AM_INCENTIVES.push({id,empId:currentUser.empId,month,portfolioValue:portfolio,currentValue:current,retentionPct:ret,upsells:[...amUpsells],advocacies:[...amAdvocacies],status:'pending',submittedOn:new Date().toISOString().slice(0,10),managerComment:'',calculatedIncentive:calc.total});
+  addNotif('PGHR001',`${currentUser.firstName} submitted AM incentive for ${month}: ₹${calc.total.toLocaleString('en-IN')}.`);
+  amUpsells=[];amAdvocacies=[];
+  toast('Incentive submitted for approval!','success');navigate('am-incentive');
+}
+function renderAMHistory(records){
+  if(records.length===0)return'<div class="card"><p style="color:var(--muted)">No submissions yet.</p></div>';
+  return`<div class="card"><div class="table-wrap"><table>
+    <thead><tr><th>Month</th><th>Portfolio USD</th><th>Retention</th><th>Upsells</th><th>Incentive</th><th>Status</th><th>Submitted</th></tr></thead>
+    <tbody>${records.map(r=>{const e=getEmp(r.empId);return`<tr>
+      ${e&&currentUser.role!=='employee'?`<td><div style="font-weight:600">${e.firstName} ${e.lastName}</div></td>`:''} 
+      <td style="font-family:'DM Mono',monospace">${r.month}</td>
+      <td>$${r.portfolioValue}</td>
+      <td><span style="color:${r.retentionPct>=91?'var(--green)':r.retentionPct>=85?'var(--orange)':'var(--red)'};font-weight:700">${r.retentionPct}%</span></td>
+      <td>${r.upsells.length} item(s)</td>
+      <td style="color:var(--green);font-weight:700">₹${r.calculatedIncentive.toLocaleString('en-IN')}</td>
+      <td><span class="status-pill status-${r.status}"><span class="dot"></span>${cap(r.status)}</span></td>
+      <td>${fmtDate(r.submittedOn)}</td>
+    </tr>`;}).join('')}</tbody>
+  </table></div></div>`;
+}
+function renderAMPolicy(){
+  return`<div class="card">
+  <div class="section-title">Upsell Incentive Slabs</div>
+  <div class="incentive-slab">
+    <div class="incentive-slab-header">Monthly Combined Upsell (USD) → INR Rate</div>
+    <div class="slab-cell">$1 – $500</div><div class="slab-cell">₹5 per USD</div>
+    <div class="slab-cell">$501 – $1,500</div><div class="slab-cell">₹10 per USD</div>
+    <div class="slab-cell">$1,501+</div><div class="slab-cell">₹15 per USD</div>
+  </div>
+  <div class="section-title" style="margin-top:16px">Retention Incentive</div>
+  <div class="incentive-slab">
+    <div class="incentive-slab-header">Portfolio Value → Retention % → Monthly Payout</div>
+    <div class="slab-cell">Up to $5,000</div><div class="slab-cell">≥85% → ₹3,000</div>
+    <div class="slab-cell">Above $5,000</div><div class="slab-cell">85–88% → ₹4,000</div>
+    <div class="slab-cell">Above $5,000</div><div class="slab-cell">89–90% → ₹6,000</div>
+    <div class="slab-cell">Above $5,000</div><div class="slab-cell">91–95% → ₹8,000</div>
+    <div class="slab-cell">Above $5,000</div><div class="slab-cell">96–100% → ₹12,000</div>
+  </div>
+  <div class="section-title" style="margin-top:16px">Advocacy</div>
+  <p style="font-size:13px;color:var(--muted2);line-height:1.7">Video Testimonial: ₹500 · Clutch Review: ₹300. Requires retention ≥ 85%. No upper limit. Paid monthly.</p>
+  <div class="warn-box" style="margin-top:12px">⚠️ Payout cycle: Performance tracked monthly → 60-day hold → released between 10th–20th of 3rd month from project start. Golden Balance Gate: portfolio retention must be ≥85% to qualify for any incentive.</div>
+  </div>`;
+}
+function switchAMTab(tab,el){
+  document.querySelectorAll('#main-content .tabs .tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  ['submit','history','policy'].forEach(t=>{const d=document.getElementById('am-tab-'+t);if(d)d.style.display=t===tab?'block':'none';});
+}
+
+// ═══════════════════════════════════════════════════════
+// BD INCENTIVE
+// ═══════════════════════════════════════════════════════
+const BD_PLANS={
+  Silver:590,Gold:990,Platinum:1890,Classic:2890,Signature:3490,Diamond:4990
+};
+const DAILY_MULTIPLIERS={
+  '>40%':0,'40%':1.0,'35%':1.5,'30%':2.0,'25%':2.5,'20%':3.0,'15%':3.5,'10%':4.0,'5%':4.5,'0%':5.0
+};
+function calcDailyIncentive(planUsd,discountPct){
+  if(discountPct>40)return 0;
+  let slabKey;
+  if(discountPct<=0)slabKey='0%';
+  else if(discountPct<=5)slabKey='5%';
+  else if(discountPct<=10)slabKey='10%';
+  else if(discountPct<=15)slabKey='15%';
+  else if(discountPct<=20)slabKey='20%';
+  else if(discountPct<=25)slabKey='25%';
+  else if(discountPct<=30)slabKey='30%';
+  else if(discountPct<=35)slabKey='35%';
+  else slabKey='40%';
+  return Math.round(planUsd*DAILY_MULTIPLIERS[slabKey]);
+}
+const MONTHLY_SLABS=[
+  {min:990,max:1500,payout:2500,level:'Unsatisfactory'},
+  {min:1501,max:2000,payout:5000,level:'Needs Improvement'},
+  {min:2001,max:2500,payout:9000,level:'Satisfactory'},
+  {min:2501,max:3000,payout:14000,level:'Good'},
+  {min:3001,max:3500,payout:18000,level:'Very Good'},
+  {min:3501,max:4000,payout:25000,level:'Excellent'},
+  {min:4001,max:4500,payout:30000,level:'Fabulous'},
+  {min:4501,max:5000,payout:40000,level:'Fabulous'},
+  {min:5001,max:5500,payout:55000,level:'Fabulous'},
+  {min:5501,max:6000,payout:80000,level:'Extraordinary'},
+  {min:6001,max:999999,payout:110000,level:'Extraordinary'},
+];
+function calcMonthlyIncentive(totalUsd){
+  const slab=MONTHLY_SLABS.find(s=>totalUsd>=s.min&&totalUsd<=s.max);
+  return slab?{payout:slab.payout,level:slab.level}:{payout:0,level:'Below Minimum'};
+}
+
+let bdSales=[];let bdWebSales=[];
+function renderBDIncentive(){
+  const myRecords=BD_INCENTIVES.filter(i=>i.empId===currentUser.empId);
+  const isAdmin=currentUser.role==='hradmin'||currentUser.role==='superadmin';
+  const records=isAdmin?BD_INCENTIVES:myRecords;
+  return`
+  <div class="page-title">Business Development Incentive</div>
+  <div class="page-sub">Log your sales and calculate your incentive automatically.</div>
+  <div class="tabs">
+    <div class="tab active" onclick="switchBDTab('submit',this)">Submit New</div>
+    <div class="tab" onclick="switchBDTab('history',this)">My Records</div>
+    <div class="tab" onclick="switchBDTab('policy',this)">📋 Policy</div>
+  </div>
+  <div id="bd-tab-submit">${renderBDSubmitForm()}</div>
+  <div id="bd-tab-history" style="display:none">${renderBDHistory(records)}</div>
+  <div id="bd-tab-policy" style="display:none">${renderBDPolicy()}</div>`;
+}
+function renderBDSubmitForm(){
+  return`
+  <div class="card" style="max-width:750px">
+    <div class="section-title">New Sales Submission</div>
+    <div class="form-group">
+      <label class="form-label">Month</label>
+      <input type="month" class="form-input" id="bd-month" value="2026-04" style="max-width:200px" />
+    </div>
+    <div class="section-title" style="font-size:13px">Recurring Sales (SEO / SMO / PPC)</div>
+    <div id="bd-sales-list"></div>
+    <button class="btn-sm btn-blue" onclick="addBDSale()" style="margin-bottom:16px">+ Add Sale</button>
+    <div class="divider"></div>
+    <div class="section-title" style="font-size:13px">Web / App Development Sales</div>
+    <div id="bd-web-list"></div>
+    <button class="btn-sm btn-blue" onclick="addBDWebSale()" style="margin-bottom:16px">+ Add Web/App Sale</button>
+    <div class="divider"></div>
+    <div id="bd-calc-result" class="info-box" style="display:none"></div>
+    <div style="display:flex;gap:12px;margin-top:8px">
+      <button class="btn-sm btn-blue" onclick="recalcBD()" style="padding:8px 20px">Calculate</button>
+      <button class="btn-submit" onclick="submitBDIncentive()">Submit for Approval</button>
+    </div>
+  </div>`;
+}
+function addBDSale(){bdSales.push({id:Date.now(),plan:'Gold',usd:990,discount:0,type:'recurring'});renderBDSalesList();}
+function removeBDSale(id){bdSales=bdSales.filter(s=>s.id!==id);renderBDSalesList();}
+function renderBDSalesList(){
+  const el=document.getElementById('bd-sales-list');if(!el)return;
+  el.innerHTML=bdSales.map(s=>`
+  <div style="display:grid;grid-template-columns:2fr 1fr 1fr 1fr auto;gap:8px;align-items:center;margin-bottom:8px">
+    <select class="form-input" onchange="bdSales.find(x=>x.id===${s.id}).plan=this.value;bdSales.find(x=>x.id===${s.id}).usd=BD_PLANS[this.value]||0;recalcBD()">
+      ${Object.keys(BD_PLANS).map(p=>`<option value="${p}" ${s.plan===p?'selected':''}>${p} ($${BD_PLANS[p]})</option>`).join('')}
+    </select>
+    <input type="number" class="form-input" placeholder="USD" value="${s.usd}" oninput="bdSales.find(x=>x.id===${s.id}).usd=+this.value;recalcBD()" />
+    <input type="number" class="form-input" placeholder="Discount %" min="0" max="100" value="${s.discount}" oninput="bdSales.find(x=>x.id===${s.id}).discount=+this.value;recalcBD()" />
+    <select class="form-input" onchange="bdSales.find(x=>x.id===${s.id}).type=this.value;recalcBD()">
+      <option value="recurring" ${s.type==='recurring'?'selected':''}>Monthly Recurring</option>
+      <option value="one-time" ${s.type==='one-time'?'selected':''}>One-Time Lumpsum</option>
+    </select>
+    <button class="btn-sm btn-red" onclick="removeBDSale(${s.id})">×</button>
+  </div>`).join('');
+}
+function addBDWebSale(){bdWebSales.push({id:Date.now(),tsv:0,fpv:0});renderBDWebList();}
+function removeBDWebSale(id){bdWebSales=bdWebSales.filter(s=>s.id!==id);renderBDWebList();}
+function renderBDWebList(){
+  const el=document.getElementById('bd-web-list');if(!el)return;
+  el.innerHTML=bdWebSales.map(s=>`
+  <div style="display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:center;margin-bottom:8px">
+    <input type="number" class="form-input" placeholder="Total Sale Value (USD)" value="${s.tsv}" oninput="bdWebSales.find(x=>x.id===${s.id}).tsv=+this.value;recalcBD()" />
+    <input type="number" class="form-input" placeholder="First Payment (USD)" value="${s.fpv}" oninput="bdWebSales.find(x=>x.id===${s.id}).fpv=+this.value;recalcBD()" />
+    <button class="btn-sm btn-red" onclick="removeBDWebSale(${s.id})">×</button>
+  </div>`).join('');
+}
+function recalcBD(){
+  // Recurring
+  let totalRecurring=0;let dailyTotal=0;
+  bdSales.forEach(s=>{
+    if(s.type==='recurring'){totalRecurring+=s.usd;}
+    else{totalRecurring+=s.usd/6;}
+    if(s.discount<=40){dailyTotal+=calcDailyIncentive(s.usd,s.discount);}
+  });
+  // Monthly incentive
+  const qualifies=totalRecurring>=990;
+  const monthly=qualifies?calcMonthlyIncentive(totalRecurring):{payout:0,level:'Below Minimum ($990 required)'};
+  // Web incentives
+  let webMonthly=0;let webDaily=0;
+  bdWebSales.forEach(s=>{
+    webMonthly+=Math.round(s.tsv*1.5);
+    webDaily+=s.fpv;
+  });
+  const el=document.getElementById('bd-calc-result');
+  if(el){
+    el.style.display='block';
+    el.innerHTML=`
+    <strong>Estimated Incentive Breakdown</strong><br>
+    Total Recurring USD: <strong>$${totalRecurring.toFixed(0)}</strong> ${qualifies?'✅':'❌ (min $990 required)'}<br>
+    Daily Incentive (recurring): <strong>₹${dailyTotal.toLocaleString('en-IN')}</strong><br>
+    Monthly Incentive: <strong>₹${monthly.payout.toLocaleString('en-IN')}</strong> <span style="color:var(--muted)">(${monthly.level})</span><br>
+    ${webMonthly>0?`Web Monthly: <strong>₹${webMonthly.toLocaleString('en-IN')}</strong><br>Web Daily: <strong>₹${webDaily.toLocaleString('en-IN')}</strong><br>`:''}
+    <span style="color:var(--green);font-size:16px;font-weight:700">Total: ₹${(dailyTotal+monthly.payout+webMonthly+webDaily).toLocaleString('en-IN')}</span>
+    <span style="color:var(--muted);font-size:11px;margin-left:8px">(Pending manager approval)</span>`;
+  }
+}
+function submitBDIncentive(){
+  const month=document.getElementById('bd-month')?.value;
+  if(!month){toast('Select a month','error');return;}
+  if(bdSales.length===0&&bdWebSales.length===0){toast('Add at least one sale','error');return;}
+  let totalRecurring=0;let dailyTotal=0;
+  bdSales.forEach(s=>{totalRecurring+=s.type==='recurring'?s.usd:s.usd/6;dailyTotal+=calcDailyIncentive(s.usd,s.discount);});
+  const monthly=totalRecurring>=990?calcMonthlyIncentive(totalRecurring):{payout:0};
+  let webMonthly=0;let webDaily=0;
+  bdWebSales.forEach(s=>{webMonthly+=Math.round(s.tsv*1.5);webDaily+=s.fpv;});
+  const id='BDI0'+String(bdiCounter++).padStart(2,'0');
+  BD_INCENTIVES.push({id,empId:currentUser.empId,month,sales:[...bdSales],webSales:[...bdWebSales],totalRecurring,status:'pending',submittedOn:new Date().toISOString().slice(0,10),managerComment:'',dailyIncentive:dailyTotal+webDaily,monthlyIncentive:monthly.payout+webMonthly});
+  addNotif('PGHR001',`${currentUser.firstName} submitted BD incentive for ${month}.`);
+  bdSales=[];bdWebSales=[];
+  toast('Submitted for approval!','success');navigate('bd-incentive');
+}
+function renderBDHistory(records){
+  if(records.length===0)return'<div class="card"><p style="color:var(--muted)">No submissions yet.</p></div>';
+  return`<div class="card"><div class="table-wrap"><table>
+    <thead><tr><th>Employee</th><th>Month</th><th>Recurring $</th><th>Daily Inc.</th><th>Monthly Inc.</th><th>Total</th><th>Status</th><th>Submitted</th></tr></thead>
+    <tbody>${records.map(r=>{const e=getEmp(r.empId);return`<tr>
+      <td><div style="font-weight:600">${e?e.firstName+' '+(e.alias&&e.alias!=='NA'?'('+e.alias+')':e.lastName):'—'}</div><div class="emp-row-id">${r.empId}</div></td>
+      <td style="font-family:'DM Mono',monospace">${r.month}</td>
+      <td>$${r.totalRecurring}</td>
+      <td>₹${r.dailyIncentive.toLocaleString('en-IN')}</td>
+      <td>₹${r.monthlyIncentive.toLocaleString('en-IN')}</td>
+      <td style="font-weight:700;color:var(--green)">₹${(r.dailyIncentive+r.monthlyIncentive).toLocaleString('en-IN')}</td>
+      <td><span class="status-pill status-${r.status}"><span class="dot"></span>${cap(r.status)}</span></td>
+      <td>${fmtDate(r.submittedOn)}</td>
+    </tr>`;}).join('')}</tbody>
+  </table></div></div>`;
+}
+function renderBDPolicy(){
+  return`<div class="card">
+  <div class="section-title">Daily Incentive — Recurring SEO/SMO/PPC</div>
+  <div class="incentive-slab">
+    <div class="incentive-slab-header">Discount % → Sale Value Multiplier</div>
+    <div class="slab-cell">>40%</div><div class="slab-cell">0 (No Incentive)</div>
+    <div class="slab-cell">40%</div><div class="slab-cell">SV × 1.0</div>
+    <div class="slab-cell">35%</div><div class="slab-cell">SV × 1.5</div>
+    <div class="slab-cell">30%</div><div class="slab-cell">SV × 2.0</div>
+    <div class="slab-cell">25%</div><div class="slab-cell">SV × 2.5</div>
+    <div class="slab-cell">20%</div><div class="slab-cell">SV × 3.0</div>
+    <div class="slab-cell">15%</div><div class="slab-cell">SV × 3.5</div>
+    <div class="slab-cell">10%</div><div class="slab-cell">SV × 4.0</div>
+    <div class="slab-cell">5%</div><div class="slab-cell">SV × 4.5</div>
+    <div class="slab-cell">0%</div><div class="slab-cell">SV × 5.0</div>
+  </div>
+  <div class="section-title" style="margin-top:16px">Monthly Incentive Slabs</div>
+  <div class="incentive-slab">
+    <div class="incentive-slab-header">Monthly Recurring (USD) → INR Payout → Level</div>
+    ${MONTHLY_SLABS.map(s=>`<div class="slab-cell">$${s.min}–${s.max===999999?'+':('$'+s.max)}</div><div class="slab-cell">₹${s.payout.toLocaleString('en-IN')} (${s.level})</div>`).join('')}
+  </div>
+  <div class="section-title" style="margin-top:16px">Web/App Development</div>
+  <p style="font-size:13px;color:var(--muted2)">Monthly: TSV × 1.5 INR · Daily: FPV × 1 INR. Requires ≥50% TSV received within 15 days.</p>
+  <div class="warn-box" style="margin-top:12px">⚠️ Min USD 990/month recurring required to qualify. Any discount between slabs → next higher slab applies.</div>
+  </div>`;
+}
+function switchBDTab(tab,el){
+  document.querySelectorAll('#main-content .tabs .tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  ['submit','history','policy'].forEach(t=>{const d=document.getElementById('bd-tab-'+t);if(d)d.style.display=t===tab?'block':'none';});
+}
+
+// ═══════════════════════════════════════════════════════
+// AM / BD APPROVALS
+// ═══════════════════════════════════════════════════════
+function renderAMApprovals(){
+  const pending=AM_INCENTIVES.filter(i=>i.status==='pending');
+  const hist=AM_INCENTIVES.filter(i=>i.status!=='pending');
+  return`
+  <div class="page-title">AM Incentive Approvals</div>
+  <div class="page-sub">Review and approve Account Management incentive submissions.</div>
+  ${renderIncentiveApprovalTable(pending,'am','pending')}
+  ${renderIncentiveApprovalTable(hist,'am','history')}`;
+}
+function renderBDApprovals(){
+  const pending=BD_INCENTIVES.filter(i=>i.status==='pending');
+  const hist=BD_INCENTIVES.filter(i=>i.status!=='pending');
+  return`
+  <div class="page-title">BD Incentive Approvals</div>
+  <div class="page-sub">Review and approve Business Development incentive submissions.</div>
+  ${renderIncentiveApprovalTable(pending,'bd','pending')}
+  ${renderIncentiveApprovalTable(hist,'bd','history')}`;
+}
+function renderIncentiveApprovalTable(records,type,mode){
+  const title=mode==='pending'?`⏳ Pending (${records.length})`:'History';
+  return`<div class="card" style="margin-bottom:18px">
+  <div class="section-title">${title}</div>
+  ${records.length===0?'<p style="color:var(--muted)">All clear!</p>':
+  `<div class="table-wrap"><table>
+    <thead><tr><th>Employee</th><th>Month</th><th>Incentive</th><th>Status</th><th>Submitted</th>${mode==='pending'?'<th>Action</th>':''}</tr></thead>
+    <tbody>${records.map(r=>{const e=getEmp(r.empId);const amt=type==='am'?r.calculatedIncentive:(r.dailyIncentive+r.monthlyIncentive);return`<tr>
+      <td><div style="font-weight:600">${e?e.firstName+' '+e.lastName:'—'}</div></td>
+      <td style="font-family:'DM Mono',monospace">${r.month}</td>
+      <td style="font-weight:700;color:var(--green)">₹${amt.toLocaleString('en-IN')}</td>
+      <td><span class="status-pill status-${r.status}"><span class="dot"></span>${cap(r.status)}</span></td>
+      <td>${fmtDate(r.submittedOn)}</td>
+      ${mode==='pending'?`<td><button class="btn-sm btn-green" onclick="handleIncentive('${r.id}','${type}','approved')">Approve</button> <button class="btn-sm btn-red" onclick="handleIncentive('${r.id}','${type}','rejected')">Reject</button></td>`:''}
+    </tr>`;}).join('')}</tbody>
+  </table></div>`}
+  </div>`;
+}
+function handleIncentive(id,type,action){
+  const list=type==='am'?AM_INCENTIVES:BD_INCENTIVES;
+  const item=list.find(i=>i.id===id);if(!item)return;
+  item.status=action;
+  const e=getEmp(item.empId);
+  if(e)addNotif(e.empId,`Your ${type.toUpperCase()} incentive for ${item.month} has been ${action}.`);
+  toast(`Incentive ${action}!`,action==='approved'?'success':'error');
+  navigate(type==='am'?'am-approvals':'bd-approvals');
+}
+
+// ═══════════════════════════════════════════════════════
+// ALL INCENTIVES DASHBOARD
+// ═══════════════════════════════════════════════════════
+function renderAllIncentives(){
+  const amApproved=AM_INCENTIVES.filter(i=>i.status==='approved');
+  const bdApproved=BD_INCENTIVES.filter(i=>i.status==='approved');
+  const amTotal=amApproved.reduce((s,i)=>s+i.calculatedIncentive,0);
+  const bdTotal=bdApproved.reduce((s,i)=>s+i.dailyIncentive+i.monthlyIncentive,0);
+
+  // AM leaderboard
+  const amByEmp={};AM_INCENTIVES.forEach(i=>{if(!amByEmp[i.empId])amByEmp[i.empId]=0;amByEmp[i.empId]+=(i.status==='approved'?i.calculatedIncentive:0);});
+  const amLB=Object.entries(amByEmp).sort((a,b)=>b[1]-a[1]);
+
+  // BD leaderboard
+  const bdByEmp={};BD_INCENTIVES.forEach(i=>{if(!bdByEmp[i.empId])bdByEmp[i.empId]=0;bdByEmp[i.empId]+=(i.status==='approved'?i.dailyIncentive+i.monthlyIncentive:0);});
+  const bdLB=Object.entries(bdByEmp).sort((a,b)=>b[1]-a[1]);
+
+  function lbEntry([empId,amt],rank){const e=getEmp(empId);const cls=rank===0?'lb-rank-1':rank===1?'lb-rank-2':rank===2?'lb-rank-3':'lb-rank-other';return`<div class="lb-row"><div class="lb-rank ${cls}">${rank+1}</div><div class="dir-avatar" style="width:32px;height:32px;border-radius:8px;background:${empColor(empId)};font-size:12px">${e?initials(e):'?'}</div><div style="flex:1"><div style="font-weight:600;font-size:13px">${e?e.firstName+' '+e.lastName:'Unknown'}</div><div style="font-size:11px;color:var(--muted)">${e?e.dept:''}</div></div><div style="font-weight:700;color:var(--green)">₹${amt.toLocaleString('en-IN')}</div></div>`;}
+
+  return`
+  <div class="page-title">Incentive Dashboard</div>
+  <div class="page-sub">Organisation-wide incentive overview.</div>
+  <div class="grid4">
+    <div class="stat-card"><div class="stat-icon">💰</div><div class="inc-pending" style="font-size:22px">₹${amTotal.toLocaleString('en-IN')}</div><div class="stat-label">AM Incentives Paid</div></div>
+    <div class="stat-card"><div class="stat-icon">📈</div><div class="inc-pending" style="font-size:22px">₹${bdTotal.toLocaleString('en-IN')}</div><div class="stat-label">BD Incentives Paid</div></div>
+    <div class="stat-card"><div class="stat-icon">⏳</div><div class="stat-val" style="color:var(--orange)">${AM_INCENTIVES.filter(i=>i.status==='pending').length}</div><div class="stat-label">AM Pending Approvals</div></div>
+    <div class="stat-card"><div class="stat-icon">⏳</div><div class="stat-val" style="color:var(--orange)">${BD_INCENTIVES.filter(i=>i.status==='pending').length}</div><div class="stat-label">BD Pending Approvals</div></div>
+  </div>
+  <div class="grid2">
+    <div class="card"><div class="section-title">🏆 AM Leaderboard</div>${amLB.length===0?'<p style="color:var(--muted);font-size:13px">No data yet.</p>':amLB.map(lbEntry).join('')}</div>
+    <div class="card"><div class="section-title">🏆 BD Leaderboard</div>${bdLB.length===0?'<p style="color:var(--muted);font-size:13px">No data yet.</p>':bdLB.map(lbEntry).join('')}</div>
+  </div>
+  <div class="card">
+    <div class="section-title">All AM Submissions</div>
+    ${renderAMHistory(AM_INCENTIVES)}
+  </div>
+  <div class="card">
+    <div class="section-title">All BD Submissions</div>
+    ${renderBDHistory(BD_INCENTIVES)}
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// DIRECTORY
+// ═══════════════════════════════════════════════════════
+function renderDirectory(){
+  const active=EMPLOYEES.filter(e=>e.active&&e.role!=='hradmin'&&e.role!=='superadmin');
+  return`
+  <div class="page-title">Employee Directory</div>
+  <div class="page-sub">${active.length} active employees.</div>
+  <div class="dir-grid">
+    ${active.map(e=>`<div class="dir-card">
+      <div class="dir-avatar" style="background:linear-gradient(135deg,${empColor(e.empId)},${empColor(e.empId)}88)">${initials(e)}</div>
+      <div>
+        <div style="font-size:14px;font-weight:600">${e.firstName} ${e.lastName}${e.alias&&e.alias!=='NA'?` <span style="color:var(--muted);font-size:11px">(${e.alias})</span>`:''}</div>
+        <div style="font-size:12px;color:var(--muted);margin-bottom:4px">${e.title}</div>
+        <span class="dir-dept-chip">${e.dept}</span>
+        <div style="font-size:11px;color:var(--muted);margin-top:5px;font-family:'DM Mono',monospace">${e.empId} · ${e.shift}</div>
+      </div>
+    </div>`).join('')}
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// ALL LEAVES
+// ═══════════════════════════════════════════════════════
+function renderAllLeaves(){
+  const all=[...LEAVES].sort((a,b)=>new Date(b.appliedOn)-new Date(a.appliedOn));
+  return`
+  <div class="page-title">Leave Overview</div>
+  <div class="page-sub">All leave requests across the organisation.</div>
+  <div class="grid3">
+    <div class="stat-card"><div class="stat-icon">⏳</div><div class="stat-val" style="color:var(--orange)">${LEAVES.filter(l=>l.status==='pending').length}</div><div class="stat-label">Pending</div></div>
+    <div class="stat-card"><div class="stat-icon">✅</div><div class="stat-val" style="color:var(--green)">${LEAVES.filter(l=>l.status==='approved').length}</div><div class="stat-label">Approved</div></div>
+    <div class="stat-card"><div class="stat-icon">❌</div><div class="stat-val" style="color:var(--red)">${LEAVES.filter(l=>l.status==='rejected').length}</div><div class="stat-label">Rejected</div></div>
+  </div>
+  <div class="card">
+    <div class="table-wrap"><table>
+      <thead><tr><th>Employee</th><th>Dept</th><th>Type</th><th>From</th><th>To</th><th>Days</th><th>Status</th><th>Applied</th></tr></thead>
+      <tbody>${all.map(l=>{const e=getEmp(l.empId);return`<tr>
+        <td><div style="font-weight:600">${e?e.firstName+' '+e.lastName:'—'}</div><div class="emp-row-id">${l.empId}</div></td>
+        <td style="color:var(--muted2)">${e?e.dept:'—'}</td>
+        <td style="font-weight:700;color:${l.type==='CL'?'var(--accent)':'var(--cyan)'}">${l.type}</td>
+        <td>${fmtDate(l.from)}</td><td>${fmtDate(l.to)}</td><td>${l.days}</td>
+        <td><span class="status-pill status-${l.status}"><span class="dot"></span>${cap(l.status)}</span></td>
+        <td>${fmtDate(l.appliedOn)}</td>
+      </tr>`;}).join('')}</tbody>
+    </table></div>
+  </div>`;
+}
+
+// ═══════════════════════════════════════════════════════
+// ADMIN PANEL
+// ═══════════════════════════════════════════════════════
+function renderAdminPanel(){
+  const rl={employee:'Employee',manager:'Manager',hradmin:'HR Admin',superadmin:'Super Admin'};
+  const rc={employee:'role-employee',manager:'role-manager',hradmin:'role-hradmin',superadmin:'role-superadmin'};
+  const all=EMPLOYEES.filter(e=>e.role!=='superadmin');
+  return`
+  <div class="page-title">Admin Panel</div>
+  <div class="page-sub">Manage all employees, leave balances, and system configuration.</div>
+  <div class="card">
+    <div class="section-title">All Employees (${all.length})</div>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Emp ID</th><th>Name</th><th>Dept</th><th>Title</th><th>Type</th><th>Shift</th><th>Role</th><th>CL Bal</th><th>SL Bal</th><th>Status</th><th>Joining</th><th>Email</th></tr></thead>
+      <tbody>${all.map(e=>{const clb=getLeaveBalance(e.empId,'CL');const slb=getLeaveBalance(e.empId,'SL');return`<tr>
+        <td style="font-family:'DM Mono',monospace;font-size:11px;color:var(--muted)">${e.empId}</td>
+        <td><div style="font-weight:600">${e.firstName} ${e.lastName}</div>${e.alias&&e.alias!=='NA'?`<div class="emp-row-id">${e.alias}</div>`:''}</td>
+        <td>${e.dept}</td><td style="color:var(--muted2)">${e.title}</td>
+        <td>${e.type}</td><td>${e.shift}</td>
+        <td><span class="role-badge ${rc[e.role]}">${rl[e.role]}</span></td>
+        <td style="font-family:'DM Mono',monospace;color:var(--accent)">${clb.balance}</td>
+        <td style="font-family:'DM Mono',monospace;color:var(--cyan)">${e.type==='Intern'?'N/A':slb.balance}</td>
+        <td><span class="status-pill ${e.active?'status-approved':'status-rejected'}"><span class="dot"></span>${e.active?'Active':'Inactive'}</span></td>
+        <td style="font-size:12px">${fmtDate(e.joining)}</td>
+        <td style="font-size:12px;color:var(--muted2)">${e.email}</td>
+      </tr>`;}).join('')}</tbody>
+    </table></div>
+  </div>
+  <div class="grid2">
+    <div class="card">
+      <div class="section-title">Leave Policy Summary</div>
+      <p style="font-size:13px;color:var(--muted2);line-height:1.8">
+        <strong>Full-Time:</strong> 12 CL/year (1/month) + 4 SL/year (1/quarter)<br>
+        <strong>Interns:</strong> 1 CL/month (no SL, no carry-forward)<br>
+        <strong>Join by 7th:</strong> CL accrues from that month<br>
+        <strong>Carry forward:</strong> Max 5 days CL (total cap 20)<br>
+        <strong>Leave year:</strong> 1 Jan – 31 Dec<br>
+        <strong>2025 balance lapsed as of 31 Dec 2025</strong>
+      </p>
+    </div>
+    <div class="card">
+      <div class="section-title">Department Summary</div>
+      ${[...new Set(EMPLOYEES.filter(e=>e.active).map(e=>e.dept))].map(d=>{
+        const count=EMPLOYEES.filter(e=>e.active&&e.dept===d).length;
+        return`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px"><span>${d}</span><span style="font-weight:700;color:var(--accent)">${count}</span></div>`;
+      }).join('')}
+    </div>
+  </div>`;
+}
+</script>
+</body>
+</html>
